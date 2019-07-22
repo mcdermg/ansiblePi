@@ -1,0 +1,54 @@
+# roles/customization/tasks/main.yml
+
+### NODE SENSOR SETUP ###
+---
+
+# PIP INSTALL ADAFRUIT_DHT
+- name: python pip install Adafruit_DHT
+  pip:
+    name: Adafruit_DHT
+    executable: pip
+
+  # CLONE newTemp.py
+- #name: Clone sensorTemp repository.
+  #git:
+  #  repo: https://github.com/mcdermg/sensorTemp.git/
+  #  dest: /home/pi/repos/sensorTemp
+  #become_user: pi
+
+
+  # CRATE SENSOR PYTHON SCRIPT
+  # TODO REMOVE WHEN REPO SET UP ABOVE
+- name: Create Python sensor script
+  template:
+    src: /home/mcdermg/repos/Raspberry-Pi/Monitoring/DHSensors/sensorTemp.py
+    dest: /home/pi/repos/sensorTemp/sensorTemp.py
+    owner: pi
+    #group:
+    mode: 0600
+  tags: [ 'never', 'sensor' ]
+
+  # SETUP CRON TO RUN PYTHON SENSOR SCRIPT
+  #TODO TEST THIS and /15
+- name: Setup cron to run script
+  cron:
+    name: "sensor temperature"
+    user: "pi"
+    #minute: /15
+    minute: "0,15,30,45"
+    hour: 3
+    job: "LINK TO PYTHON SCRIPT PYTHON VERSION??"
+  tags: [ 'never', 'sensor' ]
+
+  # SETUP CRON TO PULL SENSOR SCRIPT FROM REPO
+- name: Setup cron to pull Pyhton repo
+  cron:
+    name: "Update Python Script"
+    user: "pi"
+    minute: 30
+    hour: 3
+    job: "BASH?? LINK TO BASH SCRIPT TO AWS S3 SYNC"
+  tags: [ 'never', 'sensor' ]
+
+- name: pingPong
+  ping:

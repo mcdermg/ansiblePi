@@ -1,0 +1,18 @@
+#Home Monitoring Project - Device setup- Gary Mc Dermott
+---
+
+- name: Basic Setup
+  hosts: nodes
+  become: yes
+  vars_files:
+    - vars.yml
+  #gather_facts: no
+  roles:
+     #- { role: keyless }
+     #- { role: bootstrap }
+     #- { role: customization }
+     #- { role: RPi-Monitor }
+     #- { role: sensor , tags: ["sensor"] }
+     #- { role: sensor }
+     - { role: monitoring , when: model_three }
+     #- { role: database , when: model_three } }

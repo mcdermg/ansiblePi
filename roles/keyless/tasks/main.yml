@@ -1,0 +1,20 @@
+# roles/hostname/tasks/main.yml
+
+### KEYLESS ACCESS ###
+---
+
+  # CREAT .ssh DIRECTORY
+- name: Creates SSH directory
+  file:
+    path: /home/pi/.ssh
+    state: directory
+    owner: pi
+    #group:
+    mode: 0700
+
+  # SET THE AUTHORIZED KEY
+- name: Set authorized key taken from file
+  authorized_key:
+    user: pi
+    state: present
+    key: "{{ lookup('file', '/home/mcdermg/.ssh/id_rsa.pub') }}"
