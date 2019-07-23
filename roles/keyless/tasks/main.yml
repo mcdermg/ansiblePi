@@ -9,7 +9,7 @@
     path: /home/pi/.ssh
     state: directory
     owner: pi
-    #group:
+    group: pi
     mode: 0700
 
   # SET THE AUTHORIZED KEY
