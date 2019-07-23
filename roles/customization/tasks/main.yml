@@ -17,6 +17,26 @@
   with_items:
     - git
     - zsh
+    - mc
+    - ncdu
+
+  # CREATE MC PANELS.INI
+- name: golden mc panels
+  template:
+    src: /home/mcdermg/repos/ansiblePi/templates/panels.ini
+    dest: /home/pi/.config/mc/panels.ini
+    owner: pi
+    group: pi
+    mode: 0644
+
+  # CREATE MC INI
+- name: golden mc ini
+  template:
+    src: /home/mcdermg/repos/ansiblePi/templates/ini
+    dest: /home/pi/.config/mc/ini
+    owner: pi
+    group: pi
+    mode: 0644
 
   #CREATE REPO DIRECTORY
 - name: Creates repos directory
@@ -24,7 +44,7 @@
     path: /home/pi/repos
     state: directory
     owner: pi
-    #group:
+    group: pi
     mode: 0755
 
   # CHECK IF OH-MY-ZSH EXISTS
@@ -66,7 +86,7 @@
     src: /home/mcdermg/repos/ansiblePi/templates/.zshrc
     dest: /home/pi/.zshrc
     owner: pi
-    #group:
+    group: pi
     #TODO no idea of chmod ccheck on existing pi 20190509 GMcD
     #mode: 0600
   register: task_result
