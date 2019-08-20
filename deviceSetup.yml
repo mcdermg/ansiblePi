@@ -14,5 +14,6 @@
      #- { role: RPi-Monitor }
      #- { role: sensor , tags: ["sensor"] }
      #- { role: sensor }
-     - { role: monitoring , when: model_three }
+     #- { role: monitoring , when: model_three }
      #- { role: database , when: model_three } }
+     - { role: docker , when: model_three } }
