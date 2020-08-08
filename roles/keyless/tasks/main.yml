@@ -3,7 +3,7 @@
 ### KEYLESS ACCESS ###
 ---
 
-  # CREAT .ssh DIRECTORY
+  # CREATE .ssh DIRECTORY
 - name: Creates SSH directory
   file:
     path: /home/pi/.ssh
@@ -13,7 +13,7 @@
     mode: 0700
 
   # SET THE AUTHORIZED KEY
-- name: Set authorized key taken from file
+- name: Set authorized key taken from id rsa pub
   authorized_key:
     user: pi
     state: present

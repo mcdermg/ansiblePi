@@ -2,25 +2,37 @@
 
 ### MONITORING ###
 ---
-- name: Upgrade pip
-  pip:
-    name: pip
-    extra_args: --upgrade
+#- name: install pip
+#  become: yes
+#  package:
+#    update-cache: yes
+#    name: '{{ item }}'
+#    state: present
+#  with_items:
+#    - pip
 
-#  # APT INSTALL SYSSTAT FOR DATADOG
-- name: apt install sysstat for ddog
-  become: yes
-  apt:
-    update_cache: yes
-    pkg: sysstat
-    state: present
+##- name: Upgrade pip
+##  pip:
+##    name: pip
+##    extra_args: --upgrade
 
-#  # CHECK IF DATADOG EXISTS
-- name: check if DataDog exists already
-  become: yes
-  stat:
-    path: /root/.datadog-agent/
-  register: stat_result
+- name: Install datadog
+  shell: DD_INSTALL_ONLY=true DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=dff713632aef3f44bcce50d591d6d551 DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+
+##  # APT INSTALL SYSSTAT FOR DATADOG
+#- name: apt install sysstat for ddog
+#  become: yes
+#  apt:
+#    update_cache: yes
+#    pkg: sysstat
+#    state: present
+#
+##  # CHECK IF DATADOG EXISTS
+#- name: check if DataDog exists already
+#  become: yes
+#  stat:
+#    path: /root/.datadog-agent/
+#  register: stat_result
 
   #TODO failing on pi 4 20200208
   # INSTALL DATADOG AGENT

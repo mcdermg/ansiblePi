@@ -3,7 +3,7 @@
 ### CUSTOMIZATION ###
 ---
   # APT INSTALL GIT & ZSH
-- name: install git & zsh
+- name: install software
   become: yes
   package:
     update-cache: yes

@@ -9,12 +9,13 @@
   #gather_facts: false
 
   roles:
-     - { role: keyless }
+#     - { role: keyless }
 #     - { role: bootstrap }
 #     - { role: customization }
+      - { role: monitoring }
+#      - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }
 #     - { role: sensor , tags: ["sensor"] }
 #     - { role: sensor }
 #     - { role: docker , when: model_four }
-#     - { role: monitoring , when: model_four }
 #     - { role: database , when: model_three }

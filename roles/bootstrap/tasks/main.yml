@@ -3,18 +3,21 @@
 ### BOOTSTRAP ###
 ---
   # UPDATE APT
-- name: apt-get update
-  apt:
-    update-cache: yes
+#- name: apt-get update
+#  apt:
+#    update-cache: yes
 
   # CHECK IF HOSTNAME IS SET
-- name: Ensure hostname set
-  hostname: name={{ inventory_hostname }}
-  # TODO revise below as throwing error 20200208
-  when: not inventory_hostname | match ('(\d{1,3}\.){3}\d{1,3}')
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+# TODO revise below as throwing error 20200208 - looked again 20200807
+# Nice to have a check, this is checking host file not o the pi
+#  when: not inventory_hostname | match ('(\d{1,3}\.){3}\d{1,3}')
 #  when: not inventory_hostname | regex('(\d{1,3}\.){3}\d{1,3}')
 
   # IF NOT SET UPDATE HOSTNAME IN /etc/hosts/
+  # Needs gather facts true
 - name: Ensure hostname is in /etc/hosts
   lineinfile:
     dest=/etc/hosts
@@ -39,12 +42,13 @@
     group: root
     mode: 0644
     backup: yes
+  register: localgenUpdated
 
   # RUN LOCAL GEN
 - name: Run locale-gen
   command: locale-gen
   become: yes
-  register: task_result
+  when: localgenUpdated.stat.exists == False
 
   # REMOVE TEXT FROM /ETC/DEFAULT/LOCALE
 - name: Remove text from /etc/default/locale
@@ -101,7 +105,6 @@
     pre_reboot_delay: 3
     msg: "Reboot - initiated by Ansible"
     test_command: uptime
-  when: task_result is changed
 
 # # WAIT FOR REBOOT AND RECONNECTION
 # # TODO alter to newer reboot module
