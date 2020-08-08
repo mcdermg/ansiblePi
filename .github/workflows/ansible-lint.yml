@@ -24,7 +24,7 @@ jobs:
         #   playbook_1.yml
         #   playbook_2.yml
          targets: |
-           ./deviceSetup.yml
+            deviceSetup.yml
         # [optional]
         # Arguments to be passed to the ansible-lint
 
