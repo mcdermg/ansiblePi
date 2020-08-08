@@ -6,13 +6,13 @@
 - name: apt-get update
   apt:
     update-cache: yes
-  become: yes
 
   # CHECK IF HOSTNAME IS SET
 - name: Ensure hostname set
   hostname: name={{ inventory_hostname }}
-  when: not inventory_hostname|match('(\d{1,3}\.){3}\d{1,3}')
-  become: yes
+  # TODO revise below as throwing error 20200208
+  when: not inventory_hostname | match ('(\d{1,3}\.){3}\d{1,3}')
+#  when: not inventory_hostname | regex('(\d{1,3}\.){3}\d{1,3}')
 
   # IF NOT SET UPDATE HOSTNAME IN /etc/hosts/
 - name: Ensure hostname is in /etc/hosts
@@ -20,7 +20,6 @@
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}.+$"
     line="{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
-  become: yes
 
   # SET TIMEZONE
 - name: Set Timezone
@@ -31,9 +30,10 @@
   command: timedatectl set-ntp true
 
 # LOCALES FILE
+# This might be breaking apt, locales seem wrong and had to manulally set to GB UTF8 UTF8
 - name: Replace locale.gen file
   template:
-    src: /home/mcdermg/repos/ansiblePi/templates/locale.gen
+    src: ../../../templates/locale.gen
     dest: /etc/locale.gen
     owner: root
     group: root
@@ -76,18 +76,18 @@
       static routers={{static_router}}
       static domain_name_servers={{static_dns}}
 
-   # ENABLE VNC
-   #TODO check this is best module to use
-   #TODO check if /etc/systemd/system/multi-user.target.wants/vncserver-x11-serviced.service exists first then skip this step
+  # ENABLE VNC
 - name: Enable VNC Server
-  command: ln /usr/lib/systemd/system/vncserver-x11-serviced.service /etc/systemd/system/multi-user.target.wants/vncserver-x11-serviced.service
+  command: raspi-config nonint do_vnc 0
   become: yes
+  when: inventory_hostname in groups['four']
 
   # START VNC SERVICE
 - name: Start VNC service
   service:
     name: vncserver-x11-serviced
     state: started
+  when: inventory_hostname in groups['four']
 
   # CHANGE DEFAULT PASSWORD
 - name: change user's password
@@ -96,17 +96,19 @@
     password: "{{new_password | password_hash('sha512') }}"
 
 # REBOOT IF CHANGE
-- name: reboot
+- name: Reboot
   reboot:
     pre_reboot_delay: 3
     msg: "Reboot - initiated by Ansible"
+    test_command: uptime
   when: task_result is changed
 
-# WAIT FOR REBOOT AND RECONNECTION
-- name: Wait for the reboot to complete if there was a change.
-  wait_for_connection:
-    connect_timeout: 10
-    sleep: 5
-    delay: 5
-    timeout: 120
-  when: task_result is changed
+# # WAIT FOR REBOOT AND RECONNECTION
+# # TODO alter to newer reboot module
+# - name: Wait for the reboot to complete if there was a change.
+#   wait_for_connection:
+#     connect_timeout: 10
+#     sleep: 5
+#     delay: 5
+#     timeout: 120
+#   when: task_result is changed

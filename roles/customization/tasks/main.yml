@@ -2,16 +2,11 @@
 
 ### CUSTOMIZATION ###
 ---
-  # APT UPDATE
-- name: apt-get update
-  apt:
-    update-cache: yes
-  become: true
-
   # APT INSTALL GIT & ZSH
 - name: install git & zsh
   become: yes
   package:
+    update-cache: yes
     name: '{{ item }}'
     state: present
   with_items:
@@ -20,10 +15,18 @@
     - mc
     - ncdu
 
+- name: Create config/mc directory if it does not exist
+  file:
+    path: /home/pi/.config/mc/
+    state: directory
+    owner: pi
+    group: pi
+    mode: 0700
+
   # CREATE MC PANELS.INI
 - name: golden mc panels
   template:
-    src: /home/mcdermg/repos/ansiblePi/templates/panels.ini
+    src: ../../../templates/panels.ini
     dest: /home/pi/.config/mc/panels.ini
     owner: pi
     group: pi
@@ -32,7 +35,7 @@
   # CREATE MC INI
 - name: golden mc ini
   template:
-    src: /home/mcdermg/repos/ansiblePi/templates/ini
+    src: ../../../templates/ini
     dest: /home/pi/.config/mc/ini
     owner: pi
     group: pi
@@ -53,25 +56,30 @@
     path=/home/pi/.oh-my-zsh
   register: stat1_result
 
-  #CLONE OH MY ZSH
-  # TODO USE GIT MODULE??
-  #https://github.com/gantsign/ansible-role-oh-my-zsh/blob/master/tasks/install.yml
-- name: clone oh-my-zsh for users if exits
-  tags:
-    # Suppress warning: [ANSIBLE0006] git used in place of git module
-    # Git module doesn't allow us to set `core.autocrlf=input`.
-    - skip_ansible_lint
-  become: yes
+- git:
+    repo: 'https://github.com/robbyrussell/oh-my-zsh.git'
+    dest:  /home/pi/.oh-my-zsh
   become_user: 'pi'
-  #TODO check if the reference issue occurs if remove core.autocrlf=input 20190509 GMcD
-  # core.autocrlf=input prevents https://github.com/robbyrussell/oh-my-zsh/issues/4402
-  command: chdir=/home/pi git clone -c core.autocrlf=input --depth=1 https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh
   when: stat1_result.stat.exists == False
+
+#  #CLONE OH MY ZSH
+#  # TODO USE GIT MODULE??
+#  #https://github.com/gantsign/ansible-role-oh-my-zsh/blob/master/tasks/install.yml
+#- name: clone oh-my-zsh for users if exits
+#  tags:
+#    # Suppress warning: [ANSIBLE0006] git used in place of git module
+#    # Git module doesn't allow us to set `core.autocrlf=input`.
+#    - skip_ansible_lint
+#  become: yes
+#  become_user: 'pi'
+#  #TODO check if the reference issue occurs if remove core.autocrlf=input 20190509 GMcD
+#  # core.autocrlf=input prevents https://github.com/robbyrussell/oh-my-zsh/issues/4402
+#  command: chdir=/home/pi git clone -c core.autocrlf=input --depth=1 https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh
+#  when: stat1_result.stat.exists == False
 
   #TODO check this is it required? 20190509 GMcD
   # SET PERMISSIONS FOR ZSH USERS
 - name: set permissions of oh-my-zsh for users
-  become: yes
   file:
     path: '/home/pi/.oh-my-zsh'
     # Prevent the cloned repository from having insecure permissions. Failing to do
@@ -83,7 +91,7 @@
   # GOLDEN ZSH TEMPLATE
 - name: golden .zshrc
   template:
-    src: /home/mcdermg/repos/ansiblePi/templates/.zshrc
+    src: ../../../templates/.zshrc
     dest: /home/pi/.zshrc
     owner: pi
     group: pi
@@ -95,29 +103,21 @@
 - name: golden theme for oh my zsh
   become: yes
   template:
-    src: /home/mcdermg/repos/ansiblePi/templates/racotecnic.zsh-theme
+    src: ../../../templates/racotecnic.zsh-theme
     dest: /home/pi/.oh-my-zsh/themes/racotecnic.zsh-theme
     owner: pi
 
   # SET ZSH AS DEFAULT SHELL FOR PI USER
 - name: set zsh default shell for pi user
-  become: yes
   user:
     name: 'pi'
     shell: /bin/zsh
 
   # ONLY REBOOTS IF GOLDEN .ZSHRC CHANGEd.
   #TODO IS A REBOOT NEEDED??
-# - name: Reboot immediately if there was a change.
-#   shell: "sleep 5 && sudo reboot now"
-#   async: 1
-#   poll: 0
-#   when: task_result is changed
-#
-# - name: Wait for the reboot to complete if there was a change.
-#   wait_for_connection:
-#     connect_timeout: 20
-#     sleep: 5
-#     delay: 5
-#     timeout: 300
-#   when: task_result is changed
+- name: Reboot if there was a change to zshrc golden
+  reboot:
+    pre_reboot_delay: 3
+    msg: "Reboot - initiated by Ansible"
+    test_command: uptime
+  when: task_result is changed

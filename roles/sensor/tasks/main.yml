@@ -21,7 +21,7 @@
   # TODO REMOVE WHEN REPO SET UP ABOVE
 - name: Create Python sensor script
   template:
-    src: /home/mcdermg/repos/Raspberry-Pi/Monitoring/DHSensors/sensorTemp.py
+    src: ../../../Raspberry-Pi/Monitoring/DHSensors/sensorTemp.py
     dest: /home/pi/repos/sensorTemp/sensorTemp.py
     owner: pi
     group: pi

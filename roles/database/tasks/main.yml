@@ -19,6 +19,7 @@
     #- name: copy cnf
     #  copy: src=.my.cnf dest=~/.my.cnf owner=ubuntu mode=0644
     #  become: true
+
 - name: Start the MySQL service
   become: true
   service:

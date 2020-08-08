@@ -15,6 +15,7 @@ DEFAULT_AGENT_VERSION="5.32.2"
 # Pin pip version, in the past there was some buggy releases and get-pip.py
 # always pulls the latest version
 PIP_VERSION="19.0.3"
+# PIP_VERSION="20.0.2"
 VIRTUALENV_VERSION="1.11.6"
 SUPERVISOR_VERSION="3.3.0"
 SETUPTOOLS_VERSION="20.9.0"
@@ -398,7 +399,8 @@ print_done
 print_console "* Setting up pip"
 $DOWNLOADER "$DD_HOME/get-pip.py" https://bootstrap.pypa.io/get-pip.py
 $VENV_PYTHON_CMD "$DD_HOME/get-pip.py"
-$VENV_PIP_CMD install "pip==$PIP_VERSION"
+# ALTERED --disable-pip-version-check AS CHECK BREAKING ANSIBLE RUN 20200208
+$VENV_PIP_CMD --disable-pip-version-check install "pip==$PIP_VERSION"
 rm -f "$DD_HOME/get-pip.py"
 rm -f "$DD_HOME/get-pip.pyc"
 print_done
