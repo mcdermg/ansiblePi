@@ -1,19 +1,20 @@
-#Home Monitoring Project - Device setup- Gary Mc Dermott
+#Home Monitoring Project - Device setup - Gary Mc Dermott 2019
 ---
 
 - name: Basic Setup
-  hosts: nodes
+  hosts: all
   become: yes
   vars_files:
     - vars.yml
-  #gather_facts: no
+  #gather_facts: false
+
   roles:
-     #- { role: keyless }
-     #- { role: bootstrap }
-     #- { role: customization }
-     #- { role: RPi-Monitor }
-     #- { role: sensor , tags: ["sensor"] }
-     #- { role: sensor }
-     #- { role: monitoring , when: model_three }
-     #- { role: database , when: model_three } }
-     - { role: docker , when: model_three } }
+     - { role: keyless }
+#     - { role: bootstrap }
+#     - { role: customization }
+#     - { role: RPi-Monitor }
+#     - { role: sensor , tags: ["sensor"] }
+#     - { role: sensor }
+#     - { role: docker , when: model_four }
+#     - { role: monitoring , when: model_four }
+#     - { role: database , when: model_three }

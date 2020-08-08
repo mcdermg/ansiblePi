@@ -7,45 +7,43 @@
 - name: check if RPi-Monitor exists already
   become: yes
   stat:
-    path=/etc/rpimonitor/
+    path: /etc/rpimonitor/
   register: stat_result
-
-  # UPDATE APT 1
-- name: apt-get update 1
-  apt:
-    update-cache: yes
-  become: yes
-  when: stat_result.stat.exists == False
 
   # APT INSTALL dirmngr FOR RPi-Monitor
 - name: apt install dirmngr for RPi-Monitor
   become: yes
-  apt: pkg=dirmngr state=present
+  apt:
+    update-cache: yes
+    pkg: dirmngr
+    state: present
   when: stat_result.stat.exists == False
 
   # INSTALL RPI-MONITOR‘S PUBLIC KEY
-- name: Install RPi-Monitor‘s public key
-  command: apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 2C0D3C0F
-  become: yes
-  when: stat_result.stat.exists == False
+# - name: Install RPi-Monitor‘s public key
+#   command: apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 2C0D3C0F
+#   become: yes
+
+  # INSTALL RPI-MONITOR‘S PUBLIC KEY
+- name: Add an apt key by id from a keyserver
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 2C0D3C0F
 
   # ADD RPI-MONITOR INTO LIST OF REPOSITORY
 - name: Add RPi-Monitor into list of repository
-  command: wget http://goo.gl/vewCLL -O /etc/apt/sources.list.d/rpimonitor.list
-  become: yes
-  when: stat_result.stat.exists == False
-
-  # UPDATE APT 2
-- name: apt-get update 2
-  apt:
-    update-cache: yes
-  become: yes
+  get_url:
+    url: http://goo.gl/vewCLL
+    dest: /etc/apt/sources.list.d/rpimonitor.list
+    mode: 644
   when: stat_result.stat.exists == False
 
   # APT INSTALL RPi-Monitor
 - name: apt install RPi-Monitor
   become: yes
-  apt: pkg=rpimonitor
+  apt:
+    update-cache: yes
+    pkg: rpimonitor
   when: stat_result.stat.exists == False
 
   # RPI-MONITOR UPDATE PACKAGES INFORMATION

@@ -3,35 +3,50 @@
 ### DOCKER ###
 ---
   # CHECK IF DOCKER EXISTS
-  - name: check if Docker is installed already
+- name: check if Docker is installed already
   stat:
-    path=/usr/bin/docker
+    path: /usr/bin/docker
   register: statdocker_result
 
-  # INSTALL PIP3
-- name: Install pip3
-  apt: name={{ item }} state=latest update_cache=yes
-  loop: [ 'python3-pip']
-  when: statdocker_result.stat.exists == False
+#   # INSTALL PIP3
+# - name: Install pip3
+#   apt:
+#     name: {{ item }}
+#     state: latest
+#     update_cache: yes
+#   loop: [ 'python3-pip']
+#   when: statdocker_result.stat.exists == False
 
   # ADD DOCKER GPG APT KEY
 - name: Add Docker GPG apt Key
   apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
+    url: https://download.docker.com/linux/raspbian/gpg
     state: present
   when: statdocker_result.stat.exists == False
 
   # ADD DOCKER REPOSITRY
 - name: Add Docker Repository
   apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    repo: "deb [arch=arm64] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
     state: present
   when: statdocker_result.stat.exists == False
 
-  # INSTALL DOCKER
-- name: Update apt and install docker-ce
-  apt: update_cache=yes name=docker-ce state=latest
-  when: statdocker_result.stat.exists == False
+##  # INSTALL DOCKER
+##- name: Update apt and install docker-ce
+##  apt:
+##    update_cache: yes
+##    name: docker-ce
+##    state: latest
+##  when: statdocker_result.stat.exists == False
+
+- name: Get Docker Install script
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/dockerInstall.sh
+    mode: '0770'
+
+- name: Install docker via script
+  command: sh /tmp/dockerInstall.sh
 
   # INSTALL DOCKER MODULE FOR PYTHON
 - name: Install Docker Module for Python
@@ -44,7 +59,7 @@
   docker_image:
     name: "jetbrains/teamcity-server"
     source: pull
-when: statdocker_result.stat.exists == False
+  when: statdocker_result.stat.exists == False
 
 # CREATES TEAMCITY SERVER CONTAINER ON PORT XXXX
 #- name: Create default containers
@@ -64,7 +79,7 @@ when: statdocker_result.stat.exists == False
   docker_image:
     name: "jetbrains/teamcity-agent"
     source: pull
-when: statdocker_result.stat.exists == False
+  when: statdocker_result.stat.exists == False
 
 # CREATES TEAMCITY AGENT CONTAINER ON PORT XXXX
 #- name: Create default containers
