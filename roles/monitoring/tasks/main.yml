@@ -16,8 +16,9 @@
 ##    name: pip
 ##    extra_args: --upgrade
 
-- name: Install datadog
-  shell: DD_INSTALL_ONLY=true DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=dff713632aef3f44bcce50d591d6d551 DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+# This worked on a pi3 but then after new burn of os wouldnt, no idea why
+#- name: Install datadog
+#  shell: DD_INSTALL_ONLY=true DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=dff713632aef3f44bcce50d591d6d551 DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
 
 ##  # APT INSTALL SYSSTAT FOR DATADOG
 #- name: apt install sysstat for ddog

@@ -3,10 +3,23 @@
 ### DOCKER ###
 ---
   # CHECK IF DOCKER EXISTS
-- name: check if Docker is installed already
+- name: check if Docker is installed
   stat:
     path: /usr/bin/docker
   register: statdocker_result
+
+  # Dependecies for docker install
+- name: install docker dependencies
+  become: yes
+  package:
+    update-cache: yes
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+  when: statdocker_result.stat.exists == False
 
 #   # INSTALL PIP3
 # - name: Install pip3
@@ -27,8 +40,9 @@
   # ADD DOCKER REPOSITRY
 - name: Add Docker Repository
   apt_repository:
-    repo: "deb [arch=arm64] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
+    repo: "deb [arch=armhf] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
     state: present
+    filename: docker
   when: statdocker_result.stat.exists == False
 
 ##  # INSTALL DOCKER
@@ -44,22 +58,39 @@
     url: https://get.docker.com
     dest: /tmp/dockerInstall.sh
     mode: '0770'
+  when: statdocker_result.stat.exists == False
 
 - name: Install docker via script
   command: sh /tmp/dockerInstall.sh
+  when: statdocker_result.stat.exists == False
+
+- name: Give the pi user the ability to run Docker
+  user:
+    name: pi
+    groups: docker
+    append: yes
+  when: statdocker_result.stat.exists == False
+
+- name: Reboot to initiate permissions for pi
+  reboot:
+    pre_reboot_delay: 3
+    msg: "Reboot - initiated by Ansible"
+    test_command: uptime
+  when: statdocker_result.stat.exists == False
 
   # INSTALL DOCKER MODULE FOR PYTHON
-- name: Install Docker Module for Python
-  pip:
-   name: docker
-  when: statdocker_result.stat.exists == False
+  # why do need this?
+##- name: Install Docker Module for Python
+##  pip:
+##   name: docker
+##  when: statdocker_result.stat.exists == False
 
-# PULL TEAMCITY SERVER IMAGE
-- name: Pull TeamCity server Docker image
-  docker_image:
-    name: "jetbrains/teamcity-server"
-    source: pull
-  when: statdocker_result.stat.exists == False
+## PULL TEAMCITY SERVER IMAGE
+#- name: Pull TeamCity server Docker image
+#  docker_image:
+#    name: "jetbrains/teamcity-server"
+#    source: pull
+#  when: statdocker_result.stat.exists == False
 
 # CREATES TEAMCITY SERVER CONTAINER ON PORT XXXX
 #- name: Create default containers
@@ -74,12 +105,12 @@
 # - name: Pull default Docker image
 #  shell: docker run -it --name teamcity-server-instance -v /opt/teamcity:/data/teamcity_server/datadir -v /var/log/teamcity:/opt/teamcity/logs -p 80:8111 jetbrains/teamcity-server
 
-# PULL TEAMCITY AGENT IMAGE
-- name: Pull teamCity agent Docker image
-  docker_image:
-    name: "jetbrains/teamcity-agent"
-    source: pull
-  when: statdocker_result.stat.exists == False
+## PULL TEAMCITY AGENT IMAGE
+#- name: Pull teamCity agent Docker image
+#  docker_image:
+#    name: "jetbrains/teamcity-agent"
+#    source: pull
+#  when: statdocker_result.stat.exists == False
 
 # CREATES TEAMCITY AGENT CONTAINER ON PORT XXXX
 #- name: Create default containers

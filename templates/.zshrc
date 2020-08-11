@@ -1,7 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Added to ensure commands function 
+# Added to ensure commands function
  PATH=$HOME/bin:/usr/local/bin:/sbin:/usr/sbin:$PATH
 
 # Path to your oh-my-zsh installation.
@@ -113,3 +113,6 @@ alias nano="sudo nano -c"
 #for motd banner not implimented yet
 alias stats="/home/pi/repos/raspi-ssh-banner"
 alias ifconfig="sudo ifconfig"
+
+alias zshconfig="nano ~/.zshrc"
+alias reload="source ~/.zshrc"

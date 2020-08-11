@@ -6,13 +6,16 @@
   become: yes
   vars_files:
     - vars.yml
+  # If off some steps will fail as ansible facts not set
   #gather_facts: false
 
   roles:
-#     - { role: keyless }
-#     - { role: bootstrap }
-#     - { role: customization }
-      - { role: monitoring }
+     - { role: keyless }
+     - { role: bootstrap }
+     - { role: customization }
+     - { role: docker }
+##     - { role: datadog.datadog, become: yes }
+#      - { role: monitoring }
 #      - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }
 #     - { role: sensor , tags: ["sensor"] }
