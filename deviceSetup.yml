@@ -13,9 +13,9 @@
      - { role: keyless }
      - { role: bootstrap }
      - { role: customization }
-     - { role: docker }
+#     - { role: docker }
+     - { role: monitoring }
 ##     - { role: datadog.datadog, become: yes }
-#      - { role: monitoring }
 #      - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }
 #     - { role: sensor , tags: ["sensor"] }

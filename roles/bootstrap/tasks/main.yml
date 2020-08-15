@@ -59,18 +59,18 @@
       static routers={{static_router}}
       static domain_name_servers={{static_dns}}
 
-  # ENABLE VNC
-- name: Enable VNC Server
-  command: raspi-config nonint do_vnc 0
-  become: yes
-  when: inventory_hostname in groups['four']
+#  # ENABLE VNC
+#- name: Enable VNC Server
+#  command: raspi-config nonint do_vnc 0
+#  become: yes
+#  when: inventory_hostname in groups['four']
 
-  # START VNC SERVICE
-- name: Start VNC service
-  service:
-    name: vncserver-x11-serviced
-    state: started
-  when: inventory_hostname in groups['four']
+#  # START VNC SERVICE
+#- name: Start VNC service
+#  service:
+#    name: vncserver-x11-serviced
+#    state: started
+#  when: inventory_hostname in groups['four']
 
   # CHANGE DEFAULT PASSWORD
 - name: change user's password
