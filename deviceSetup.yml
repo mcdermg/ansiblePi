@@ -14,7 +14,7 @@
      - { role: bootstrap }
      - { role: customization }
 #     - { role: docker }
-     - { role: monitoring }
+#     - { role: monitoring }
 ##     - { role: datadog.datadog, become: yes }
 #      - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }

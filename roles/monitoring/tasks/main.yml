@@ -2,25 +2,10 @@
 
 ### MONITORING ###
 ---
-#- name: install pip
-#  become: yes
-#  package:
-#    update-cache: yes
-#    name: '{{ item }}'
-#    state: present
-#  with_items:
-#    - pip
-
 - name: Check if datadog config file exists
   stat:
     path: /etc/datadog-agent/datadog.yaml
   register: ddog_config_file
-
-#- name: Download datadog deb package for datadog-iot-agent armhf deb
-#  get_url:
-#    url: "{{ datadog_url }}"
-#    dest: "/home/pi/repos/datadog-iot-agent_7.deb"
-#  when: ddog_config_file.stat.exists == False
 
 - name: Install Datadog iot agent 7
   apt:
