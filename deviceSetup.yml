@@ -10,10 +10,11 @@
   #gather_facts: false
 
   roles:
-     - { role: keyless }
-     - { role: bootstrap }
-     - { role: customization }
-#     - { role: docker }
+#     - { role: keyless }
+#     - { role: bootstrap }
+#     - { role: customization }
+     - { role: docker }
+     - { role: git}
 #     - { role: monitoring }
 ##     - { role: datadog.datadog, become: yes }
 #      - { role: monitoring , when: model_four }

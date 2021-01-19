@@ -1,22 +1,25 @@
-# roles/customization/tasks/main.yml
+# roles/sensor/tasks/main.yml
 
-### NODE SENSOR SETUP ###
+### Setup for home monitoring ###
 ---
-
 # PIP INSTALL ADAFRUIT_DHT
+# TODO check the homemonitoring repo scripts for all the pip requirements
+# maybe a requirments.txt ile would be easier to manage and install from
+# RPi.GPIO as GPIO
+# import dht11
+# No longer using below but needs updating to above + more and maybe requirements
 - name: python pip install Adafruit_DHT
   pip:
     name: Adafruit_DHT
     executable: pip
 
-  # CLONE newTemp.py
-- #name: Clone sensorTemp repository.
-  #git:
-  #  repo: https://github.com/mcdermg/sensorTemp.git/
-  #  dest: /home/pi/repos/sensorTemp
-  #become_user: pi
+- name: clone homeMonitoring repository
+  git:
+    repo: git@github.com:mcdermg/homeMonitoring.git
+    dest: /home/pi/repos/homeMonitoring
+    update: no
 
-
+# TODO to be removed, investigate the tags and how run this only on certain hosts
   # CRATE SENSOR PYTHON SCRIPT
   # TODO REMOVE WHEN REPO SET UP ABOVE
 - name: Create Python sensor script
@@ -29,7 +32,8 @@
   tags: [ 'never', 'sensor' ]
 
   # SETUP CRON TO RUN PYTHON SENSOR SCRIPT
-  #TODO TEST THIS and /15
+  # TODO TEST THIS and /15
+  # Needs refactioring for home monitoring repo
 - name: Setup cron to run script
   cron:
     name: "sensor temperature"
@@ -39,16 +43,3 @@
     hour: 3
     job: "LINK TO PYTHON SCRIPT PYTHON VERSION??"
   tags: [ 'never', 'sensor' ]
-
-  # SETUP CRON TO PULL SENSOR SCRIPT FROM REPO
-- name: Setup cron to pull Pyhton repo
-  cron:
-    name: "Update Python Script"
-    user: "pi"
-    minute: 30
-    hour: 3
-    job: "BASH?? LINK TO BASH SCRIPT TO AWS S3 SYNC"
-  tags: [ 'never', 'sensor' ]
-
-- name: pingPong
-  ping:

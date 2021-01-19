@@ -1,0 +1,38 @@
+# roles/git/tasks/main.yml
+
+### GIT ###
+---
+- name: generate ssh key
+  openssh_keypair:
+    path: /home/pi/.ssh/id_rsa
+
+- name: Read SSH public key to authorize
+  #Ansible 2.10
+# ansible.builtin.shell: cat /home/pi/.ssh/id_rsa.pub
+  shell: cat /home/pi/.ssh/id_rsa.pub
+  register: ssh_pub_key
+
+- name: Ensure git is present
+  apt:
+    name: git
+    state: present
+  become: yes
+
+- name: Authorize key with GitHub
+  local_action:
+    module: github_key
+    name: 'pi-{{ ansible_hostname }}'
+    token: '{{ github_access_token }}'
+    pubkey: '{{ ssh_pub_key.stdout }}'
+
+- name: Set git config email
+  git_config:
+    name: user.email
+    scope: global
+    value: '{{ git_user_email }}'
+
+- name: Set git config username
+  git_config:
+    name: user.name
+    scope: global
+    value: '{{ git_user_name }}'

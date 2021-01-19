@@ -1,7 +1,2 @@
-# Distribution / packaging
-/templates/authorized_keys
 hosts.ini
-todo.txt
-vars.yml
-
 .vault_pass
