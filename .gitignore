@@ -3,3 +3,5 @@
 hosts.ini
 todo.txt
 vars.yml
+
+.vault_pass
