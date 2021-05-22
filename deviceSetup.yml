@@ -13,10 +13,10 @@
 #     - { role: keyless }
 #     - { role: bootstrap }
 #     - { role: customization }
-     - { role: tailscale }
+#     - { role: tailscale }
 #     - { role: docker }
 #     - { role: git}
-#     - { role: monitoring }
+     - { role: monitoring }
 ##     - { role: datadog.datadog, become: yes }
 #      - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }

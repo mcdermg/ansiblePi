@@ -10,9 +10,11 @@
 - name: Install Datadog iot agent 7
   apt:
     deb: "{{ datadog_url }}"
+    # saved the deb file to S3 but still pulling from ddog. check terraform state bucket
+    # if ever this stops working as know this c=version does the business.
   when: ddog_config_file.stat.exists == False
 
-# TODO Need to check this someething not working
+# TODO Need to check this someething not working - unknown date...
 - name: Add datadog config
   template:
     src: ./templates/datadog.yaml.js
@@ -22,9 +24,6 @@
     mode: '644'
   when: ddog_config_file.stat.exists == False
 
-#- name: Temp - add config from remote datadog example file
-#  shell: sudo sh -c "sed 's/api_key:.*/api_key: {{ datadog_api_key }}/' /etc/datadog-agent/datadog.yaml.example > /etc/datadog-agent/datadog.yaml"
-
 - name: Enable datadog service
   service:
     name: datadog-agent
@@ -32,138 +31,3 @@
     state: started
   when: ddog_config_file.stat.exists == False
 
-##- name: Upgrade pip
-##  pip:
-##    name: pip
-##    extra_args: --upgrade
-
-# This worked on a pi3 but then after new burn of os wouldnt, no idea why
-#- name: Install datadog
-#  shell: DD_INSTALL_ONLY=true DD_AGENT_MAJOR_VERSION=7 DD_API_KEY={{ datadog_api_key }} DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
-
-##  # APT INSTALL SYSSTAT FOR DATADOG
-#- name: apt install sysstat for ddog
-#  become: yes
-#  apt:
-#    update_cache: yes
-#    pkg: sysstat
-#    state: present
-#
-##  # CHECK IF DATADOG EXISTS
-#- name: check if DataDog exists already
-#  become: yes
-#  stat:
-#    path: /root/.datadog-agent/
-#  register: stat_result
-
-  #TODO failing on pi 4 20200208
-  # INSTALL DATADOG AGENT
-##- name: Install DataDog from script
-#  script: ../../../templates/setup_agent_gmcd.sh --{{ datadog_api_key }}
-##  script: ../../../templates/setup_agent_gmcd.sh {{ datadog_api_key }}
-##  become: yes
-##  when: stat_result.stat.exists == False
-
-#- name: Copy datadog install scrit to host
-#  template:
-#    src: ../../../templates/setup_agent_gmcd.sh
-#    dest: /tmp/
-#    owner: root
-#    group: root
-#    mode: 0774
-#  when: stat_result.stat.exists == False
-#
-#- name: Install DataDog from script
-##  become_method: sudo
-#  become: yes
-#  command: sh ./setup_agent_gmcd.sh {{ datadog_api_key }}
-#  args:
-#    chdir: /tmp/
-#  when: stat_result.stat.exists == False
-#
-##  # STOP DATADOG
-#- name: Stop Datadog
-#  become: yes
-#  shell: ~/.datadog-agent/bin/agent stop
-#  when: stat_result.stat.exists == False
-#
-#  # CREATE DATADOG.CONF
-#- name: Create datadog.conf
-#  template:
-#    src: ../../../templates/datadog.conf
-#    dest: /root/.datadog-agent/agent/datadog.conf
-#    owner: root
-#    group: root
-#    mode: 0644
-#  when: stat_result.stat.exists == False
-#
-#  # ADD API KEY TO DATADOG DATADOG.CONF
-#- name: Add API key to DataDog datadog.conf
-#  replace:
-#    path: /root/.datadog-agent/agent/datadog.conf
-#    regexp: '# hostname: mymachine.mydomain'
-#    replace: 'hostname: raspberry.{{ inventory_hostname }}'
-#  when: stat_result.stat.exists == False
-#
-#  # ADD HOSTNAME TO DATADOG DATADOG.CONF
-#- name: Add Hostname to DataDog datadog.conf
-#  replace:
-#    path: /root/.datadog-agent/agent/datadog.conf
-#    regexp: 'api_key:'
-#    replace: 'api_key:{{ datadog_api_key }}'
-#  when: stat_result.stat.exists == False
-#
-#  # ADD TAGS TO DATADOG DATADOG.CONF
-#  #TODO variables for the tags
-#- name: Add tags DataDog datadog.conf
-#  replace:
-#    path: /root/.datadog-agent/agent/datadog.conf
-#    regexp: '# tags: mytag, env:prod, role:database'
-#    replace: 'tags: env:dev, ip:{{ ansible_default_ipv4.address }}'
-#  when: stat_result.stat.exists == False
-#
-#  # ENABLE PROCESS AGENT DATADOG.CONF
-#- name: Enable process agent in datadog.conf
-#  replace:
-#    path: /root/.datadog-agent/agent/datadog.conf
-#    regexp: '# process_agent_enabled: false'
-#    replace: 'process_agent_enabled: true'
-#  when: stat_result.stat.exists == False
-#
-## ADD datdor service file in system d
-#- name: Create datadog.service
-#  template:
-#    src: ../../../templates/datadog.service
-#    dest: /etc/systemd/system/datadog.service
-#    owner: root
-#    group: root
-#    mode: 0644
-#  when: stat_result.stat.exists == False
-#
-#  # Start the Datadog service
-#- name: Start datadog service
-#  systemd:
-#    daemon_reload: yes
-#    enabled: yes
-#    state: started
-#    name: datadog
-#  when: stat_result.stat.exists == False
-#
-#  # PIP INSTALL DATADOG PYTHON LIBRARY
-#- name: pip install datadog
-#  pip:
-#    name: datadog
-#  when: stat_result.stat.exists == False
-#
-##TODO NOT WORKING - see API guide manual test of API not working either
-### DATADOG EVENT
-#- name: DataDog Event
-#  datadog_event:
-#    title: Ansible notification
-#    text: Testing from {{ inventory_hostname }}
-#    priority: low
-#    alert_type: info
-#    api_key: "{{ datadog_api_key }}"
-#    app_key: "{{ datadog_app_key }}"
-#  ignore_errors: yes
-#  when: stat_result.stat.exists == False
