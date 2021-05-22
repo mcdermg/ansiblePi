@@ -10,9 +10,10 @@
   #gather_facts: false
 
   roles:
-     - { role: keyless }
-     - { role: bootstrap }
-     - { role: customization }
+#     - { role: keyless }
+#     - { role: bootstrap }
+#     - { role: customization }
+     - { role: tailscale }
 #     - { role: docker }
 #     - { role: git}
 #     - { role: monitoring }
