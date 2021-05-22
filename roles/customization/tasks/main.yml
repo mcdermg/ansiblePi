@@ -97,7 +97,6 @@
     group: pi
     #TODO no idea of chmod ccheck on existing pi 20190509 GMcD
     #mode: 0600
-  register: task_result
 
   # GOLDEN THEME FOR ZSH - RACOTECNIC
 - name: golden theme for oh my zsh
@@ -112,6 +111,34 @@
   user:
     name: 'pi'
     shell: /bin/zsh
+
+- name: Add a new user named homepi
+  user:
+    name=homepi
+
+- name: Add homepi user to the sudoers
+  copy:
+    dest: "/etc/sudoers.d/homepi"
+    content: "homepi  ALL=(ALL)  NOPASSWD: ALL"
+
+- name: Deploy SSH Key
+  authorized_key: user=homepi
+                     key="{{ lookup('file', '~/.ssh/home.pub') }}"
+                     state=present
+
+- name: Disable Password Authentication
+  lineinfile:
+       dest=/etc/ssh/sshd_config
+       regexp='^PasswordAuthentication'
+       line="PasswordAuthentication no"
+       state=present
+       backup=yes
+  register: task_result
+
+- name: restart ssh
+  service:
+    name=sshd
+    state=restarted
 
   # ONLY REBOOTS IF GOLDEN .ZSHRC CHANGEd.
   #TODO IS A REBOOT NEEDED??
