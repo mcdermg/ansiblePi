@@ -62,22 +62,6 @@
   become_user: 'pi'
   when: stat1_result.stat.exists == False
 
-#  #CLONE OH MY ZSH
-#  # TODO USE GIT MODULE??
-#  #https://github.com/gantsign/ansible-role-oh-my-zsh/blob/master/tasks/install.yml
-#- name: clone oh-my-zsh for users if exits
-#  tags:
-#    # Suppress warning: [ANSIBLE0006] git used in place of git module
-#    # Git module doesn't allow us to set `core.autocrlf=input`.
-#    - skip_ansible_lint
-#  become: yes
-#  become_user: 'pi'
-#  #TODO check if the reference issue occurs if remove core.autocrlf=input 20190509 GMcD
-#  # core.autocrlf=input prevents https://github.com/robbyrussell/oh-my-zsh/issues/4402
-#  command: chdir=/home/pi git clone -c core.autocrlf=input --depth=1 https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh
-#  when: stat1_result.stat.exists == False
-
-  #TODO check this is it required? 20190509 GMcD
   # SET PERMISSIONS FOR ZSH USERS
 - name: set permissions of oh-my-zsh for users
   file:
@@ -95,8 +79,7 @@
     dest: /home/pi/.zshrc
     owner: pi
     group: pi
-    #TODO no idea of chmod ccheck on existing pi 20190509 GMcD
-    #mode: 0600
+    mode: 0644
 
   # GOLDEN THEME FOR ZSH - RACOTECNIC
 - name: golden theme for oh my zsh
@@ -141,8 +124,7 @@
     state=restarted
 
   # ONLY REBOOTS IF GOLDEN .ZSHRC CHANGEd.
-  #TODO IS A REBOOT NEEDED??
-- name: Reboot if there was a change to zshrc golden
+- name: Reboot if disableld password
   reboot:
     pre_reboot_delay: 3
     msg: "Reboot - initiated by Ansible"
