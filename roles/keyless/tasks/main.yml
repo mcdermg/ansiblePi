@@ -12,9 +12,16 @@
     group: pi
     mode: 0700
 
-  # SET THE AUTHORIZED KEY
+  # Personal laptop key
 - name: Set authorized key taken from id rsa pub
   authorized_key:
     user: pi
     state: present
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+  # Android key
+- name: Set authorized key taken from id rsa pub
+  authorized_key:
+    user: pi
+    state: present
+    key: "{{ lookup('file', '../../../templates/android.pub') }}"
