@@ -14,9 +14,12 @@
 #     - { role: fail2ban }
 #     - { role: bootstrap }
 #     - { role: customization }
-#     - { role: tailscale }
 #     - { role: docker }
 #     - { role: git}
+# TODO remove tailscale??
+# TODO fail2ban setup
+# TODO review below, refactor as monitoring needed others seperate playbook
+#     - { role: tailscale }
 #     - { role: monitoring }
 ##     - { role: datadog.datadog, become: yes }
 #      - { role: monitoring , when: model_four }
