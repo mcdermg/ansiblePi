@@ -24,7 +24,7 @@
 ##     - { role: datadog.datadog, become: yes }
 #      - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }
-#     - { role: sensor , tags: ["sensor"] }
+#     - { role: sensor , tags: [ "sensor" ] }
 #     - { role: sensor }
 #     - { role: docker , when: model_four }
 #     - { role: database , when: model_three }

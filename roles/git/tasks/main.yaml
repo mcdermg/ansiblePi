@@ -9,7 +9,7 @@
 - name: Read SSH public key to authorize
   #Ansible 2.10
 # ansible.builtin.shell: cat /home/pi/.ssh/id_rsa.pub
-  shell: cat /home/pi/.ssh/id_rsa.pub
+  command: cat /home/pi/.ssh/id_rsa.pub
   register: ssh_pub_key
 
 - name: Ensure git is present

@@ -27,7 +27,7 @@
 
   # SET TIMEZONE
 - name: Set Timezone
-  command: timedatectl set-timezone {{var_timezone}}
+  command: timedatectl set-timezone {{ var_timezone }}
 
   # ENABLE NTP-SYNC
 - name: NTP-SYNC
@@ -36,11 +36,11 @@
 # Debug local variable manually
 - name: loacl variable
   debug:
-    msg: "{{ var_local }}"
+    msg: '{{ var_local }}'
 
 # Alter local
 - name: Change locale
-  shell: "raspi-config nonint do_change_locale {{ var_local }}"
+  command: "raspi-config nonint do_change_locale {{ var_local }}"
 
   # SET STATIC IP
 - name: Set Static IP
@@ -50,14 +50,14 @@
     insertafter: "fallback static_eth0"
     block: |
       interface wlan0
-      static ip_address={{static_ip_and_mask}}
-      static routers={{static_router}}
-      static domain_name_servers={{static_dns}}
+      static ip_address={{ static_ip_and_mask }}
+      static routers={{ static_router }}
+      static domain_name_servers={{ static_dns }}
   ignore_errors: yes
-  
+
   # CHANGE DEFAULT PASSWORD
 - name: change user's password
   user:
     name: pi
-    password: "{{new_password | password_hash('sha512') }}"
+    password: "{{ new_password | password_hash('sha512') }}"
 

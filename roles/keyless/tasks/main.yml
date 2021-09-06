@@ -19,6 +19,13 @@
     state: present
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
+  # Windows key
+- name: Set windows authorized key
+  authorized_key:
+    user: pi
+    state: present
+    key: "{{ lookup('file', '../../../templates/win.pub') }}"
+
   # Android key
 - name: Set authorized key taken from id rsa pub
   authorized_key:
