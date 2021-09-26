@@ -30,4 +30,3 @@
     enabled: yes
     state: started
   when: ddog_config_file.stat.exists == False
-

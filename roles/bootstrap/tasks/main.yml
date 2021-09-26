@@ -60,4 +60,3 @@
   user:
     name: pi
     password: "{{ new_password | password_hash('sha512') }}"
-
