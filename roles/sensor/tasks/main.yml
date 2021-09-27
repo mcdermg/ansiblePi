@@ -38,7 +38,7 @@
   cron:
     name: "sensor temperature"
     user: "pi"
-    #minute: /15
+    # minute: /15
     minute: "0,15,30,45"
     hour: 3
     job: "LINK TO PYTHON SCRIPT PYTHON VERSION??"

@@ -19,7 +19,7 @@
 - name: install Tailscale
   become: yes
   package:
-    update-cache: yes
+    update-cache: true
     name: '{{ item }}'
     state: present
   with_items:
@@ -29,4 +29,4 @@
   # This needs to be updated as expires after 90 days
   # login to tailscale nad generate new one not ususal addr
   command: tailscale up --authkey {{ tailscale_api }}
-  become: yes
+  become: true
