@@ -1,1 +1,20 @@
-# TODO
+# roles/fail2ban/tasks/main.yml
+
+### Fail2Ban ###
+---
+  - name: install apt fail2ban package
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+      cache_valid_time: 3600
+    with_items:
+      - fail2ban
+
+  - name: override the basic fail2ban configuration with .local file
+    copy:
+      src: '../../../templates/fail2ban.config'
+      dest: /etc/fail2ban/jail.local
+      owner: root
+      group: root
+      mode: 0644
