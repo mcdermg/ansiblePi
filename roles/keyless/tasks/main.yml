@@ -27,7 +27,7 @@
     key: "{{ lookup('file', '../../../templates/win.pub') }}"
 
   # Android key
-- name: Set authorized key taken from id rsa pub
+- name: Set authorized key taken from connectbot on android device
   authorized_key:
     user: pi
     state: present
