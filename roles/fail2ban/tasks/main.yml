@@ -2,7 +2,7 @@
 
 ### Fail2Ban ###
 ---
-  - name: install apt fail2ban package
+  - name: Install fail2ban package apt
     apt:
       name: "{{ item }}"
       state: latest
@@ -11,6 +11,11 @@
     with_items:
       - fail2ban
 
+  - name: Check if fail2ban config already in place
+    stat:
+      path: /etc/fail2ban/jail.local
+    register: fail2ban_config
+
   - name: override the basic fail2ban configuration with .local file
     copy:
       src: '../../../templates/fail2ban.config'
@@ -18,3 +23,4 @@
       owner: root
       group: root
       mode: 0644
+    when: fail2ban_config == false
