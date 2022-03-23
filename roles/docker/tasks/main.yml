@@ -2,14 +2,12 @@
 
 ### DOCKER ###
 ---
-  # CHECK IF DOCKER EXISTS
-- name: check if Docker is installed
+- name: Check if Docker is installed
   stat:
     path: /usr/bin/docker
   register: statdocker_result
 
-  # Dependecies for docker install
-- name: install docker dependencies
+- name: Install docker dependencies
   become: yes
   package:
     update-cache: yes
@@ -31,38 +29,37 @@
 #   when: statdocker_result.stat.exists == False
 
   # ADD DOCKER GPG APT KEY
-- name: Add Docker GPG apt Key
-  apt_key:
-    url: https://download.docker.com/linux/raspbian/gpg
-    state: present
-  when: statdocker_result.stat.exists == False
+#- name: Add Docker GPG apt Key
+#  apt_key:
+#    url: https://download.docker.com/linux/raspbian/gpg
+#    state: present
+#  when: statdocker_result.stat.exists == False
 
   # ADD DOCKER REPOSITRY
-- name: Add Docker Repository
-  apt_repository:
-    repo: "deb [arch=armhf] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
-    state: present
-    filename: docker
+#- name: Add Docker Repository
+#  apt_repository:
+#    repo: "deb [arch=armhf] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
+#    state: present
+#    filename: docker
+#  when: statdocker_result.stat.exists == False
+
+- name: Update apt and install docker.io
+  apt:
+    update_cache: yes
+    name: docker.io
+    state: latest
   when: statdocker_result.stat.exists == False
 
-##  # INSTALL DOCKER
-##- name: Update apt and install docker-ce
-##  apt:
-##    update_cache: yes
-##    name: docker-ce
-##    state: latest
-##  when: statdocker_result.stat.exists == False
+#- name: Get Docker Install script
+#  get_url:
+#    url: https://get.docker.com
+#    dest: /tmp/dockerInstall.sh
+#    mode: '0770'
+#  when: statdocker_result.stat.exists == False
 
-- name: Get Docker Install script
-  get_url:
-    url: https://get.docker.com
-    dest: /tmp/dockerInstall.sh
-    mode: '0770'
-  when: statdocker_result.stat.exists == False
-
-- name: Install docker via script
-  command: sh /tmp/dockerInstall.sh
-  when: statdocker_result.stat.exists == False
+#- name: Install docker via script
+#  command: sh /tmp/dockerInstall.sh
+#  when: statdocker_result.stat.exists == False
 
 - name: Give the pi user the ability to run Docker
   user:
@@ -77,53 +74,3 @@
     msg: "Reboot - initiated by Ansible"
     test_command: uptime
   when: statdocker_result.stat.exists == False
-
-  # INSTALL DOCKER MODULE FOR PYTHON
-  # why do need this?
-##- name: Install Docker Module for Python
-##  pip:
-##   name: docker
-##  when: statdocker_result.stat.exists == False
-
-## PULL TEAMCITY SERVER IMAGE
-#- name: Pull TeamCity server Docker image
-#  docker_image:
-#    name: "jetbrains/teamcity-server"
-#    source: pull
-#  when: statdocker_result.stat.exists == False
-
-# CREATES TEAMCITY SERVER CONTAINER ON PORT XXXX
-#- name: Create default containers
-#  docker_container:
-#    name: "TeamCity"
-#    image: "jetbrains/teamcity-server"
-#    See shell command below and try to refracter to here
-#    command: ""
-#    state: present
-
-#   START THE TEAMCITY CONTAINER #TODO TEST AS MAY NOT COMPLETE AS STAYS Up
-# - name: Pull default Docker image
-#  shell: docker run -it --name teamcity-server-instance -v /opt/teamcity:/data/teamcity_server/datadir -v /var/log/teamcity:/opt/teamcity/logs -p 80:8111 jetbrains/teamcity-server
-
-## PULL TEAMCITY AGENT IMAGE
-#- name: Pull teamCity agent Docker image
-#  docker_image:
-#    name: "jetbrains/teamcity-agent"
-#    source: pull
-#  when: statdocker_result.stat.exists == False
-
-# CREATES TEAMCITY AGENT CONTAINER ON PORT XXXX
-#- name: Create default containers
-#  docker_container:
-#    name: "TeamCity"
-#    image: "jetbrains/teamcity-agent"
-#    See shell command below and try to refracter to here
-#    command: ""
-#    state: present
-
-#   START THE TEAMCITY AGENT #TODO TEST AS MAY NOT COMPLETE AS STAYS Up
-# - name: Pull default Docker image
-#  shell:
-#docker run -it -e SERVER_URL="99.79.181.48:80"
-#-v <path>:/data/teamcity_agent/conf -v /var/run/docker.sock:/var/run/docker.sock -v /opt/buildagent/work:/opt/buildagent/work -v /opt/buildagent/temp:/opt/buildagent/temp -v /opt/buildagent/tools:/opt/buildagent/tools -v /opt/buildagent/plugins:/opt/buildagent/plugins -v /opt/buildagent/system:/opt/buildagent/system jetbrains/teamcity-agent
-#TODO NEED TO LOOK FOR teamcity_agent and add it to path in command above
