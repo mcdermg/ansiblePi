@@ -7,59 +7,12 @@
     path: /usr/bin/docker
   register: statdocker_result
 
-- name: Install docker dependencies
-  become: yes
-  package:
-    update-cache: yes
-    name: '{{ item }}'
-    state: present
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - software-properties-common
-  when: statdocker_result.stat.exists == False
-
-#   # INSTALL PIP3
-# - name: Install pip3
-#   apt:
-#     name: {{ item }}
-#     state: latest
-#     update_cache: yes
-#   loop: [ 'python3-pip']
-#   when: statdocker_result.stat.exists == False
-
-  # ADD DOCKER GPG APT KEY
-#- name: Add Docker GPG apt Key
-#  apt_key:
-#    url: https://download.docker.com/linux/raspbian/gpg
-#    state: present
-#  when: statdocker_result.stat.exists == False
-
-  # ADD DOCKER REPOSITRY
-#- name: Add Docker Repository
-#  apt_repository:
-#    repo: "deb [arch=armhf] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
-#    state: present
-#    filename: docker
-#  when: statdocker_result.stat.exists == False
-
 - name: Update apt and install docker.io
   apt:
     update_cache: yes
     name: docker.io
     state: latest
   when: statdocker_result.stat.exists == False
-
-#- name: Get Docker Install script
-#  get_url:
-#    url: https://get.docker.com
-#    dest: /tmp/dockerInstall.sh
-#    mode: '0770'
-#  when: statdocker_result.stat.exists == False
-
-#- name: Install docker via script
-#  command: sh /tmp/dockerInstall.sh
-#  when: statdocker_result.stat.exists == False
 
 - name: Give the pi user the ability to run Docker
   user:

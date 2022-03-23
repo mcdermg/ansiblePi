@@ -2,7 +2,7 @@
 ---
 
 - name: Basic Setup
-  hosts: all
+  hosts: four
   become: yes
   vars_files:
     - vars.yml
@@ -10,11 +10,12 @@
   #gather_facts: false
 
   roles:
-     - { role: keyless }
-     - { role: bootstrap }
-     - { role: customization }
-     - { role: fail2ban }
-#     - { role: docker }
+      - { role: keyless }
+      - { role: bootstrap }
+      - { role: customization }
+      - { role: docker }
+     # - { role: fail2ban }
+#     - { role: services }
 #     - { role: git}
 # TODO remove tailscale??
 # TODO review below, refactor as monitoring needed others seperate playbook
