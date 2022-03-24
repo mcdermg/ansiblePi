@@ -3,30 +3,30 @@
 ### MONITORING ###
 ---
 - name: Check if datadog config file exists
-  stat:
+  ansible.builtin.stat:
     path: /etc/datadog-agent/datadog.yaml
   register: ddog_config_file
 
 - name: Install Datadog iot agent 7
-  apt:
+  ansible.builtin.apt:
     deb: "{{ datadog_url }}"
     # saved the deb file to S3 but still pulling from ddog. check terraform state bucket
     # if ever this stops working as know this c=version does the business.
-  when: ddog_config_file.stat.exists == False
+  when: ddog_config_file.stat.exists
 
 # TODO Need to check this someething not working - unknown date...
 - name: Add datadog config
-  template:
-    src: ./templates/datadog.yaml.js
+  ansible.builtin.template:
+    src: datadog.yaml.js
     dest: /etc/datadog-agent/datadog.yaml
     owner: dd-agent
     group: dd-agent
     mode: '644'
-  when: ddog_config_file.stat.exists == False
+  when: ddog_config_file.stat.exists
 
 - name: Enable datadog service
-  service:
+  ansible.builtin.service:
     name: datadog-agent
-    enabled: yes
+    enabled: true
     state: started
-  when: ddog_config_file.stat.exists == False
+  when: ddog_config_file.stat.exists
