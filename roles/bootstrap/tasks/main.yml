@@ -3,13 +3,13 @@
 ### BOOTSTRAP ###
 ---
   # UPDATE APT
-- name: apt-get update
-  apt:
-    update-cache: yes
+- name: apt get update
+  ansible.builtin.apt:
+    update-cache: true
 
   # CHECK IF HOSTNAME IS SET
 - name: Set hostname
-  hostname:
+  ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
 # TODO revise below as throwing error 20200208 - looked again 20200807
 # Nice to have a check, this is checking host file not o the pi
@@ -35,16 +35,16 @@
 
 # Debug local variable manually
 - name: loacl variable
-  debug:
+  ansible.builtin.debug:
     msg: '{{ var_local }}'
 
 # Alter local
 - name: Change locale
-  command: "raspi-config nonint do_change_locale {{ var_local }}"
+  ansible.builtin.command: "raspi-config nonint do_change_locale {{ var_local }}"
 
   # SET STATIC IP
 - name: Set Static IP
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/dhcpcd.conf
     marker: "\n## {mark} added by ansible bootstrap"
     insertafter: "fallback static_eth0"
@@ -53,7 +53,7 @@
       static ip_address={{ static_ip_and_mask }}
       static routers={{ static_router }}
       static domain_name_servers={{ static_dns }}
-  ignore_errors: yes
+  ignore_errors: true
 
   # CHANGE DEFAULT PASSWORD
 - name: change user's password

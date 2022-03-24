@@ -4,9 +4,9 @@
 ---
   # APT INSTALL GIT & ZSH
 - name: install software
-  become: yes
+  become: true
   package:
-    update-cache: yes
+    update-cache: true
     name: '{{ item }}'
     state: present
   with_items:
@@ -83,7 +83,7 @@
 
   # GOLDEN THEME FOR ZSH - RACOTECNIC
 - name: golden theme for oh my zsh
-  become: yes
+  become: true
   template:
     src: ../../../templates/racotecnic.zsh-theme
     dest: /home/pi/.oh-my-zsh/themes/racotecnic.zsh-theme

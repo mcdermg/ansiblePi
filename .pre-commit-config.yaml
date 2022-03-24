@@ -1,14 +1,16 @@
 ---
 exclude: '^.*\.(pub)$'
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-    -   id: check-yaml
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
-# -   repo: https://github.com/ansible-community/ansible-lint.git
-#     rev: v5.1.3 # latest release tag from https://github.com/ansible-community/ansible-lint/releases/
-#     hooks:
-#     - id: ansible-lint
-#       files: \.(yaml|yml)$
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.3.0
+  hooks:
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+
+# Needs more config, a lot of warnings and picking up this file
+#- repo: https://github.com/ansible-community/ansible-lint.git
+#  rev: v5.1.3 # latest release tag from https://github.com/ansible-community/ansible-lint/releases/
+#  hooks:
+#  - id: ansible-lint
+#    files: \.(yaml|yml)$

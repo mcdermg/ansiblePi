@@ -9,7 +9,7 @@
 
 - name: Update apt and install docker.io
   apt:
-    update_cache: yes
+    update_cache: true
     name: docker.io
     state: latest
   when: statdocker_result.stat.exists == False
