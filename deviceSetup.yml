@@ -19,7 +19,7 @@
 #    - { role: monitoring }
 #    - { role: datadog.datadog, become: true }
 #    - { role: monitoring , when: model_four }
-#    - { role: RPi-Monitor }
+#    - { role: rpi_monitor }
 #    - { role: sensor , tags: [ "sensor" ] }
 #    - { role: sensor }
 # TODO this is going in home lab so remove
