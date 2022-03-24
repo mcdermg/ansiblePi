@@ -15,16 +15,16 @@
       - { role: customization }
       - { role: docker }
      # - { role: fail2ban }
+# TODO fix services and verify working
 #     - { role: services }
 #     - { role: git}
-# TODO remove tailscale??
 # TODO review below, refactor as monitoring needed others seperate playbook
-#     - { role: tailscale }
 #     - { role: monitoring }
-##     - { role: datadog.datadog, become: yes }
-#      - { role: monitoring , when: model_four }
+#     - { role: datadog.datadog, become: yes }
+#     - { role: monitoring , when: model_four }
 #     - { role: RPi-Monitor }
 #     - { role: sensor , tags: [ "sensor" ] }
 #     - { role: sensor }
-#     - { role: docker , when: model_four }
+# TODO this is going in home lab so remove
+        #     - { role: docker , when: model_four }
 #     - { role: database , when: model_three }
