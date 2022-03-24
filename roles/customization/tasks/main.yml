@@ -5,7 +5,7 @@
   # APT INSTALL GIT & ZSH
 - name: install software
   become: true
-  package:
+  ansible.builtin.package:
     update-cache: true
     name: '{{ item }}'
     state: present
@@ -16,7 +16,7 @@
     - ncdu
 
 - name: Create config/mc directory if it does not exist
-  file:
+  ansible.builtin.file:
     path: /home/pi/.config/mc/
     state: directory
     owner: pi
@@ -25,8 +25,8 @@
 
   # CREATE MC PANELS.INI
 - name: golden mc panels
-  template:
-    src: ../../../templates/panels.ini
+  ansible.builtin.template:
+    src: panels.ini
     dest: /home/pi/.config/mc/panels.ini
     owner: pi
     group: pi
@@ -34,16 +34,16 @@
 
   # CREATE MC INI
 - name: golden mc ini
-  template:
-    src: ../../../templates/ini
+  ansible.builtin.template:
+    src: ini
     dest: /home/pi/.config/mc/ini
     owner: pi
     group: pi
     mode: 0644
 
-  #CREATE REPO DIRECTORY
+  # CREATE REPO DIRECTORY
 - name: Creates repos directory
-  file:
+  ansible.builtin.file:
     path: /home/pi/repos
     state: directory
     owner: pi
@@ -52,30 +52,32 @@
 
   # CHECK IF OH-MY-ZSH EXISTS
 - name: stat oh-my-zsh - check if exists
-  stat:
+  ansible.builtin.stat:
     path=/home/pi/.oh-my-zsh
-  register: stat1_result
+  register: ohmyzsh_result
 
-- git:
+- name: Git clone oh my zsh
+  ansible.builtin.git:
     repo: 'https://github.com/robbyrussell/oh-my-zsh.git'
-    dest:  /home/pi/.oh-my-zsh
+    dest: /home/pi/.oh-my-zsh
+    version: master
   become_user: 'pi'
-  when: stat1_result.stat.exists == False
+  when: ohmyzsh_result.stat.exists
 
   # SET PERMISSIONS FOR ZSH USERS
 - name: set permissions of oh-my-zsh for users
-  file:
+  ansible.builtin.file:
     path: '/home/pi/.oh-my-zsh'
     # Prevent the cloned repository from having insecure permissions. Failing to do
     # so causes compinit() calls to fail with "command not found: compdef" errors
     # for users with insecure umasks (e.g., "002", allowing group writability).
     mode: 'go-w'
-    recurse: yes
+    recurse: true
 
   # GOLDEN ZSH TEMPLATE
 - name: golden .zshrc
-  template:
-    src: ../../../templates/.zshrc
+  ansible.builtin.template:
+    src: .zshrc
     dest: /home/pi/.zshrc
     owner: pi
     group: pi
@@ -84,23 +86,23 @@
   # GOLDEN THEME FOR ZSH - RACOTECNIC
 - name: golden theme for oh my zsh
   become: true
-  template:
-    src: ../../../templates/racotecnic.zsh-theme
+  ansible.builtin.template:
+    src: racotecnic.zsh-theme
     dest: /home/pi/.oh-my-zsh/themes/racotecnic.zsh-theme
     owner: pi
 
   # SET ZSH AS DEFAULT SHELL FOR PI USER
 - name: set zsh default shell for pi user
-  user:
+  ansible.builtin.user:
     name: 'pi'
     shell: /bin/zsh
 
 - name: Add a new user named homepi
-  user:
+  ansible.builtin.user:
     name=homepi
 
 - name: Add homepi user to the sudoers
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/sudoers.d/homepi"
     content: "homepi  ALL=(ALL)  NOPASSWD: ALL"
 
@@ -110,22 +112,22 @@
                      state=present
 
 - name: Disable Password Authentication
-  lineinfile:
-       dest=/etc/ssh/sshd_config
-       regexp='^PasswordAuthentication'
-       line="PasswordAuthentication no"
-       state=present
-       backup=yes
+  ansible.builtin.lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp='^PasswordAuthentication'
+    line="PasswordAuthentication no"
+    state=present
+    backup=yes
   register: task_result
 
 - name: restart ssh
-  service:
+  ansible.builtin.service:
     name=sshd
     state=restarted
 
   # ONLY REBOOTS IF GOLDEN .ZSHRC CHANGEd.
 - name: Reboot if disableld password
-  reboot:
+  ansible.builtin.reboot:
     pre_reboot_delay: 3
     msg: "Reboot - initiated by Ansible"
     test_command: uptime
