@@ -1,0 +1,5 @@
+- name: Restart system
+  ansible.builtin.reboot:
+    pre_reboot_delay: 3
+    msg: "Reboot - initiated by Ansible"
+    test_command: uptime
