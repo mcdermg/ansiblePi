@@ -12,9 +12,8 @@
     - {role: bootstrap}
     - {role: customization}
     - {role: docker}
-   # - { role: fail2ban }
-# TODO fix services and verify working
-#    - { role: services }
+#    - { role: fail2ban }
+#    - { role: services } # TODO fix services and verify working
 #    - { role: git}
 # TODO review below, refactor as monitoring needed others seperate playbook
 #    - { role: monitoring }
