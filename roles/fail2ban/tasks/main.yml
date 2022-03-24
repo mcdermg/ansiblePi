@@ -2,25 +2,25 @@
 
 ### Fail2Ban ###
 ---
-  - name: Install fail2ban package apt
-    apt:
-      name: "{{ item }}"
-      state: latest
-      update_cache: true
-      cache_valid_time: 3600
-    with_items:
-      - fail2ban
+- name: Install fail2ban package apt
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  with_items:
+    - fail2ban
 
-  - name: Check if fail2ban config already in place
-    stat:
-      path: /etc/fail2ban/jail.local
-    register: fail2ban_config
+- name: Check if fail2ban config already in place
+  ansible.builtin.stat:
+    path: /etc/fail2ban/jail.local
+  register: fail2ban_config
 
-  - name: override the basic fail2ban configuration with .local file
-    copy:
-      src: '../../../templates/fail2ban.config'
-      dest: /etc/fail2ban/jail.local
-      owner: root
-      group: root
-      mode: 0644
-    when: fail2ban_config == false
+- name: override the basic fail2ban configuration with .local file
+  ansible.builtin.copy:
+    src: 'fail2ban.config'
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+  when: not fail2ban_config.exists
