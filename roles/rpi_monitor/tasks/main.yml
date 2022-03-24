@@ -17,7 +17,7 @@
     pkg: dirmngr
     state: present
   become: true
-  when: stat_result.stat.exists
+  when: not stat_result.stat.exists
 
   # INSTALL RPI-MONITOR‘S PUBLIC KEY
 # - name: Install RPi-Monitor‘s public key
@@ -36,7 +36,7 @@
     url: http://goo.gl/vewCLL
     dest: /etc/apt/sources.list.d/rpimonitor.list
     mode: 644
-  when: stat_result.stat.exists
+  when: not stat_result.stat.exists
 
   # APT INSTALL RPi-Monitor
 - name: apt install RPi-Monitor
@@ -44,10 +44,10 @@
     update-cache: true
     pkg: rpimonitor
   become: true
-  when: stat_result.stat.exists
+  when: not stat_result.stat.exists
 
   # RPI-MONITOR UPDATE PACKAGES INFORMATION
 - name: RPi-Monitor update packages information
   ansible.builtin.command: /etc/init.d/rpimonitor update
   become: true
-  when: stat_result.stat.exists
+  when: not stat_result.stat.exists

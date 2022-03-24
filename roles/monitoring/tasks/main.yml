@@ -12,7 +12,7 @@
     deb: "{{ datadog_url }}"
     # saved the deb file to S3 but still pulling from ddog. check terraform state bucket
     # if ever this stops working as know this c=version does the business.
-  when: ddog_config_file.stat.exists
+  when: not ddog_config_file.stat.exists
 
 # TODO Need to check this someething not working - unknown date...
 - name: Add datadog config
@@ -22,11 +22,11 @@
     owner: dd-agent
     group: dd-agent
     mode: '644'
-  when: ddog_config_file.stat.exists
+  when: not ddog_config_file.stat.exists
 
 - name: Enable datadog service
   ansible.builtin.service:
     name: datadog-agent
     enabled: true
     state: started
-  when: ddog_config_file.stat.exists
+  when: not ddog_config_file.stat.exists

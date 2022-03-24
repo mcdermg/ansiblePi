@@ -12,18 +12,18 @@
     update_cache: true
     name: docker.io
     state: present
-  when: statdocker_result.stat.exists
+  when: not statdocker_result.stat.exists
 
 - name: Give the pi user the ability to run Docker
   ansible.builtin.user:
     name: pi
     groups: docker
     append: true
-  when: statdocker_result.stat.exists
+  when: not statdocker_result.stat.exists
 
 - name: Reboot to initiate permissions for pi
   ansible.builtin.reboot:
     pre_reboot_delay: 3
     msg: "Reboot - initiated by Ansible"
     test_command: uptime
-  when: statdocker_result.stat.exists
+  when: not statdocker_result.stat.exists
