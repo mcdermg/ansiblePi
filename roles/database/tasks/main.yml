@@ -4,11 +4,11 @@
 ---
 - name: apt-get update
   apt:
-    update-cache: yes
+    update-cache: true
   become: true
 
 - name: Install MySQL & python-mysqldb
-  become: yes
+  become: true
   package:
     name: '{{ item }}'
     state: present

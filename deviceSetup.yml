@@ -1,30 +1,28 @@
-#Home Monitoring Project - Device setup - Gary Mc Dermott 2019
+# Raspberry Pi device setup - Gary Mc Dermott 2019
 ---
 
 - name: Basic Setup
   hosts: four
-  become: yes
+  become: true
   vars_files:
     - vars.yml
-  # If off some steps will fail as ansible facts not set
-  #gather_facts: false
 
   roles:
-      - { role: keyless }
-      - { role: bootstrap }
-      - { role: customization }
-      - { role: docker }
-     # - { role: fail2ban }
-#     - { role: services }
-#     - { role: git}
-# TODO remove tailscale??
+    - {role: keyless}
+    - {role: bootstrap}
+    - {role: customization}
+    - {role: docker}
+   # - { role: fail2ban }
+# TODO fix services and verify working
+#    - { role: services }
+#    - { role: git}
 # TODO review below, refactor as monitoring needed others seperate playbook
-#     - { role: tailscale }
-#     - { role: monitoring }
-##     - { role: datadog.datadog, become: yes }
-#      - { role: monitoring , when: model_four }
-#     - { role: RPi-Monitor }
-#     - { role: sensor , tags: [ "sensor" ] }
-#     - { role: sensor }
-#     - { role: docker , when: model_four }
-#     - { role: database , when: model_three }
+#    - { role: monitoring }
+#    - { role: datadog.datadog, become: true }
+#    - { role: monitoring , when: model_four }
+#    - { role: RPi-Monitor }
+#    - { role: sensor , tags: [ "sensor" ] }
+#    - { role: sensor }
+# TODO this is going in home lab so remove
+#    - { role: docker , when: model_four }
+#    - { role: database , when: model_three }

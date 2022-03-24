@@ -16,7 +16,7 @@
   apt:
     name: git
     state: present
-  become: yes
+  become: true
 
 - name: Authorize key with GitHub
   local_action:
