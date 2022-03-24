@@ -9,37 +9,38 @@
 # import dht11
 # No longer using below but needs updating to above + more and maybe requirements
 - name: python pip install Adafruit_DHT
-  pip:
+  ansible.builtin.pip:
     name: Adafruit_DHT
     executable: pip
 
 - name: clone homeMonitoring repository
-  git:
+  ansible.builtin.git:
     repo: git@github.com:mcdermg/homeMonitoring.git
     dest: /home/pi/repos/homeMonitoring
-    update: no
+    update: false
+    version: master
 
 # TODO to be removed, investigate the tags and how run this only on certain hosts
   # CRATE SENSOR PYTHON SCRIPT
   # TODO REMOVE WHEN REPO SET UP ABOVE
 - name: Create Python sensor script
-  template:
+  ansible.builtin.template:
     src: ../../../Raspberry-Pi/Monitoring/DHSensors/sensorTemp.py
     dest: /home/pi/repos/sensorTemp/sensorTemp.py
     owner: pi
     group: pi
     mode: 0600
-  tags: [ 'never', 'sensor' ]
+  tags: ['never', 'sensor']
 
   # SETUP CRON TO RUN PYTHON SENSOR SCRIPT
   # TODO TEST THIS and /15
   # Needs refactioring for home monitoring repo
 - name: Setup cron to run script
-  cron:
+  ansible.builtin.cron:
     name: "sensor temperature"
     user: "pi"
     # minute: /15
     minute: "0,15,30,45"
     hour: 3
     job: "LINK TO PYTHON SCRIPT PYTHON VERSION??"
-  tags: [ 'never', 'sensor' ]
+  tags: ['never', 'sensor']
