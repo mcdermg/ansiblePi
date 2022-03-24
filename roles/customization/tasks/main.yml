@@ -111,6 +111,11 @@
                      key="{{ lookup('file', '~/.ssh/home.pub') }}"
                      state=present
 
+- name: restart ssh
+  ansible.builtin.service:
+    name=sshd
+    state=restarted
+
 - name: Disable Password Authentication
   ansible.builtin.lineinfile:
     dest=/etc/ssh/sshd_config
@@ -118,17 +123,5 @@
     line="PasswordAuthentication no"
     state=present
     backup=yes
-  register: task_result
-
-- name: restart ssh
-  ansible.builtin.service:
-    name=sshd
-    state=restarted
-
-  # ONLY REBOOTS IF GOLDEN .ZSHRC CHANGEd.
-- name: Reboot if disableld password
-  ansible.builtin.reboot:
-    pre_reboot_delay: 3
-    msg: "Reboot - initiated by Ansible"
-    test_command: uptime
-  when: task_result is changed
+  notify:
+    - Restart system
