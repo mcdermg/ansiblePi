@@ -25,13 +25,17 @@
     line="{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
   register: task_result
 
-  # SET TIMEZONE
-- name: Set Timezone
-  ansible.builtin.command: timedatectl set-timezone {{ var_timezone }}
+- name: Set timezone
+  community.general.timezone:
+    name: '{{ var_timezone }}'
 
-  # ENABLE NTP-SYNC
+# - name: Set Timezone
+#   ansible.builtin.command: timedatectl set-timezone {{ var_timezone }}
+
+# ENABLE NTP-SYNC
 - name: NTP-SYNC
   ansible.builtin.command: timedatectl set-ntp true
+#  when: time
 
 # Debug local variable manually
 - name: loacl variable
