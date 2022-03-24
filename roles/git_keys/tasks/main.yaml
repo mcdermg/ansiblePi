@@ -1,4 +1,4 @@
-# roles/git/tasks/main.yml
+# roles/git_keys/tasks/main.yml
 
 ### GIT ###
 ---
@@ -7,13 +7,11 @@
     path: /home/pi/.ssh/id_rsa
 
 - name: Read SSH public key to authorize
-  #Ansible 2.10
-# ansible.builtin.shell: cat /home/pi/.ssh/id_rsa.pub
-  command: cat /home/pi/.ssh/id_rsa.pub
+  ansible.builtin.command: cat /home/pi/.ssh/id_rsa.pub
   register: ssh_pub_key
 
 - name: Ensure git is present
-  apt:
+  ansible.builtin.apt:
     name: git
     state: present
   become: true

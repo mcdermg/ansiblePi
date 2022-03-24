@@ -14,7 +14,7 @@
     - {role: docker}
 #    - { role: fail2ban }
 #    - { role: services } # TODO fix services and verify working
-#    - { role: git}
+#    - { role: git_keys}
 # TODO review below, refactor as monitoring needed others seperate playbook
 #    - { role: monitoring }
 #    - { role: datadog.datadog, become: true }
