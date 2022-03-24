@@ -19,7 +19,7 @@
   # IF NOT SET UPDATE HOSTNAME IN /etc/hosts/
   # Needs gather facts true
 - name: Ensure hostname is in /etc/hosts
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}.+$"
     line="{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
@@ -27,11 +27,11 @@
 
   # SET TIMEZONE
 - name: Set Timezone
-  command: timedatectl set-timezone {{ var_timezone }}
+  ansible.builtin.command: timedatectl set-timezone {{ var_timezone }}
 
   # ENABLE NTP-SYNC
 - name: NTP-SYNC
-  command: timedatectl set-ntp true
+  ansible.builtin.command: timedatectl set-ntp true
 
 # Debug local variable manually
 - name: loacl variable
@@ -57,6 +57,6 @@
 
   # CHANGE DEFAULT PASSWORD
 - name: change user's password
-  user:
+  ansible.builtin.user:
     name: pi
     password: "{{ new_password | password_hash('sha512') }}"
