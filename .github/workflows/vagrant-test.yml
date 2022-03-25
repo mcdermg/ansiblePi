@@ -20,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+# TODO cache brew?
       - name: Setup Ansible via brew
         uses: lyricwulf/abc@v1
         with:
@@ -34,8 +35,8 @@ jobs:
       - name: Setup pub key for keyless role
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
 
-      - name: Pre flight check vagrant box for cahcing
-        run: ls -la ~/.vagrant.d/boxes
+      - name: Get dir
+        run: pwd
 
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
@@ -54,4 +55,8 @@ jobs:
         continue-on-error: true
 
       - name: Post flight check vagrant box for cahcing
-        run: ls -la ~/.vagrant.d/boxes
+        run: |
+          cd tests
+          ls -la
+          cd vagrant
+          ls -la
