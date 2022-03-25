@@ -27,29 +27,17 @@ jobs:
           key: ${{ runner.os }}-ansible
           restore-keys: |
             ${{ runner.os }}-ansible
-        continue-on-error: true
 
       - name: Setup Ansible via brew
         uses: lyricwulf/abc@v1
         with:
           macos: ansible
-        continue-on-error: true
-
-      - name: Brew Install Ansible, Check Brew & Ansible versions
-        run: |
-          brew --version
-          which ansible
-          ansible --version
-          brew install ansible
-        continue-on-error: true
 
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
-        continue-on-error: true
 
       - name: Setup pub key for keyless role
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
-        continue-on-error: true
 
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
@@ -58,9 +46,7 @@ jobs:
           key: ${{ runner.os }}-vagrant
           restore-keys: |
             ${{ runner.os }}-vagrant
-        continue-on-error: true
 
       - name: Run vagrant up
         run: vagrant up --provision
         working-directory: ./tests
-        continue-on-error: true
