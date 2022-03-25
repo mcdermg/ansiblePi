@@ -36,4 +36,4 @@ jobs:
 
       - name: Run vagrant up
         run: vagrant up --provision
-        working-directory: ./app
+        working-directory: ./tests
