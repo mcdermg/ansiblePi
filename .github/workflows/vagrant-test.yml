@@ -31,6 +31,12 @@ jobs:
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
 
+      - name: Setup pub key for keyless role
+        run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
+
+      - name: Pre flight check vagrant box for cahcing
+        run: ls -la ~/.vagrant.d/boxes
+
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
         with:
@@ -45,3 +51,7 @@ jobs:
       - name: Run vagrant up
         run: vagrant up --provision
         working-directory: ./tests
+        continue-on-error: true
+
+      - name: Post flight check vagrant box for cahcing
+        run: ls -la ~/.vagrant.d/boxes
