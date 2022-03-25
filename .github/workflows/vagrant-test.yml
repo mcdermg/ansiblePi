@@ -25,18 +25,33 @@ jobs:
         uses: lyricwulf/abc@v1
         with:
           macos: ansible
+        continue-on-error: true
 
       - name: Check Brew Ansible version
-        run: ansible --version
+        run: |
+          which ansible
+          ansible --version
+        continue-on-error: true
 
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
+        continue-on-error: true
 
       - name: Setup pub key for keyless role
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
+        continue-on-error: true
 
       - name: Get dir
-        run: pwd
+        run: |
+          pwd
+          ls -la
+        continue-on-error: true
+
+      - name: Get dir
+        run: |
+          pwd
+          ls -la
+        continue-on-error: true
 
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
@@ -45,18 +60,39 @@ jobs:
           key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
           restore-keys: |
             ${{ runner.os }}-vagrant-
+        continue-on-error: true
 
       - name: Show Vagrant version
         run: vagrant --version
+        continue-on-error: true
+
+      - name: Run vagrant up
+        run: vagrant box add PersistentCoder/raspberry-pi-desktop-32bit
+        working-directory: ./tests
+        continue-on-error: true
 
       - name: Run vagrant up
         run: vagrant up --provision
         working-directory: ./tests
         continue-on-error: true
 
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
+        continue-on-error: true
+
+      - name: Check box dir
+        run: ls -la ~/.vagrant.d/boxes
+        continue-on-error: true
+
       - name: Post flight check vagrant box for cahcing
         run: |
           cd tests
           ls -la
-          cd vagrant
+          cd .vagrant
           ls -la
+        continue-on-error: true
