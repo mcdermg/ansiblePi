@@ -40,6 +40,12 @@ jobs:
       - name: Check Brew Ansible version
         run: |
           which ansible
+          brew install ansible
+        continue-on-error: true
+
+      - name: Check Brew Ansible version
+        run: |
+          which ansible
           ansible --version
         continue-on-error: true
 
@@ -57,7 +63,7 @@ jobs:
           ls -la
         continue-on-error: true
 
-      - name: Get dir
+      - name: Show vagrant boxes dir
         run: ls -la ~/.vagrant.d/boxes
         continue-on-error: true
 

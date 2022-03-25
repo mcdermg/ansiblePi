@@ -10,6 +10,7 @@
     owner: '{{ user }}'
     group: '{{ user }}'
     mode: 0700
+  when: "user == 'pi'"
 
 # Personal laptop key
 - name: Set authorized key taken from id rsa pub
