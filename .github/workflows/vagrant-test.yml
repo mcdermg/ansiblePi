@@ -29,10 +29,17 @@ jobs:
             ${{ runner.os }}-ansible
         continue-on-error: true
 
-      - name: Brew Install Ansible, Check Brew & Ansible version
+      - name: Setup Ansible via brew
+        uses: lyricwulf/abc@v1
+        with:
+          macos: ansible
+        continue-on-error: true
+
+      - name: Brew Install Ansible, Check Brew & Ansible versions
         run: |
           brew --version
           which ansible
+          ansible --version
           brew install ansible
         continue-on-error: true
 
