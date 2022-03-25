@@ -16,11 +16,11 @@
     path: /etc/fail2ban/jail.local
   register: fail2ban_config
 
-- name: override the basic fail2ban configuration with .local file
+- name: Override the basic fail2ban configuration with .local file
   ansible.builtin.copy:
-    src: 'fail2ban.config'
+    src: '../../templates/fail2ban.config'
     dest: /etc/fail2ban/jail.local
     owner: root
     group: root
     mode: 0644
-  when: not fail2ban_config.exists
+  when: not fail2ban_config.stat.exists

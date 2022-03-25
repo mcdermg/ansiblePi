@@ -2,11 +2,12 @@
 ---
 
 - name: Basic Setup
-  hosts: four
+  hosts: all
   become: true
   vars_files:
     - vars.yml
-
+  vars:
+    user: pi
   roles:
     - {role: keyless}
     - {role: bootstrap}

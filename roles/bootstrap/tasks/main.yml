@@ -3,7 +3,7 @@
 ### BOOTSTRAP ###
 ---
   # UPDATE APT
-- name: apt get update
+- name: Apt get update
   ansible.builtin.apt:
     update-cache: true
 
@@ -35,16 +35,18 @@
 # ENABLE NTP-SYNC
 - name: NTP-SYNC
   ansible.builtin.command: timedatectl set-ntp true
-#  when: time
 
 # Debug local variable manually
-- name: loacl variable
+- name: Show loacl variable
   ansible.builtin.debug:
     msg: '{{ var_local }}'
 
 # Alter local
+# Not sorking in Vagrant test run so will skip
 - name: Change locale
   ansible.builtin.command: "raspi-config nonint do_change_locale {{ var_local }}"
+  become: true
+  when: "user == 'pi'"
 
   # SET STATIC IP
 - name: Set Static IP
@@ -60,7 +62,7 @@
   ignore_errors: true
 
   # CHANGE DEFAULT PASSWORD
-- name: change user's password
+- name: Change user's password
   ansible.builtin.user:
     name: pi
     password: "{{ new_password | password_hash('sha512') }}"

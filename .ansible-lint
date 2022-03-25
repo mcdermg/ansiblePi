@@ -1,6 +1,6 @@
 # .ansible-lint
 warn_list:  # or 'skip_list' to silence them completely
-  - deprecated-local-action  # Do not use 'local_action', use 'delegate_to: localhost'
+  - deprecated-local-action
   - experimental  # all rules tagged as experimental
   - no-changed-when  # Commands should not change things if nothing needs doing
 

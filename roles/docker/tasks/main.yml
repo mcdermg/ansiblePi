@@ -5,25 +5,20 @@
 - name: Check if Docker is installed
   ansible.builtin.stat:
     path: /usr/bin/docker
-  register: statdocker_result
+  register: docker_result
 
 - name: Update apt and install docker.io
   ansible.builtin.apt:
     update_cache: true
     name: docker.io
     state: present
-  when: not statdocker_result.stat.exists
+  when: not docker_result.stat.exists
 
 - name: Give the pi user the ability to run Docker
   ansible.builtin.user:
     name: pi
     groups: docker
     append: true
-  when: not statdocker_result.stat.exists
-
-- name: Reboot to initiate permissions for pi
-  ansible.builtin.reboot:
-    pre_reboot_delay: 3
-    msg: "Reboot - initiated by Ansible"
-    test_command: uptime
-  when: not statdocker_result.stat.exists
+  when: not docker_result.stat.exists
+  notify:
+    - Restart system

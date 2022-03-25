@@ -3,7 +3,7 @@
 ### CUSTOMIZATION ###
 ---
   # APT INSTALL GIT & ZSH
-- name: install software
+- name: Install common software
   become: true
   ansible.builtin.package:
     update-cache: true
@@ -19,55 +19,52 @@
   ansible.builtin.file:
     path: /home/pi/.config/mc/
     state: directory
-    owner: pi
-    group: pi
+    owner: '{{ user }}'
+    group: '{{ user }}'
     mode: 0700
 
   # CREATE MC PANELS.INI
-- name: golden mc panels
+- name: Golden Midnight Commander panels
   ansible.builtin.template:
     src: panels.ini
     dest: /home/pi/.config/mc/panels.ini
-    owner: pi
-    group: pi
+    owner: '{{ user }}'
+    group: '{{ user }}'
     mode: 0644
 
-  # CREATE MC INI
-- name: golden mc ini
+- name: Golden Midnight Commander ini file
   ansible.builtin.template:
     src: ini
     dest: /home/pi/.config/mc/ini
-    owner: pi
-    group: pi
+    owner: '{{ user }}'
+    group: '{{ user }}'
     mode: 0644
 
-  # CREATE REPO DIRECTORY
 - name: Creates repos directory
   ansible.builtin.file:
     path: /home/pi/repos
     state: directory
-    owner: pi
-    group: pi
+    owner: '{{ user }}'
+    group: '{{ user }}'
     mode: 0755
 
-  # CHECK IF OH-MY-ZSH EXISTS
-- name: stat oh-my-zsh - check if exists
+- name: Check if oh-my-zsh exists
   ansible.builtin.stat:
-    path=/home/pi/.oh-my-zsh
+    path: '/home/{{ user }}/.oh-my-zsh'
   register: ohmyzsh_result
 
 - name: Git clone oh my zsh
   ansible.builtin.git:
     repo: 'https://github.com/robbyrussell/oh-my-zsh.git'
-    dest: /home/pi/.oh-my-zsh
+    dest: '/home/{{ user }}/.oh-my-zsh'
     version: master
-  become_user: 'pi'
+  become_user: '{{ user }}'
   when: not ohmyzsh_result.stat.exists
 
   # SET PERMISSIONS FOR ZSH USERS
-- name: set permissions of oh-my-zsh for users
+- name: Set permissions of oh-my-zsh for users
   ansible.builtin.file:
-    path: '/home/pi/.oh-my-zsh'
+    path: '/home/{{ user }}/.oh-my-zsh'
     # Prevent the cloned repository from having insecure permissions. Failing to do
     # so causes compinit() calls to fail with "command not found: compdef" errors
     # for users with insecure umasks (e.g., "002", allowing group writability).
@@ -75,46 +72,32 @@
     recurse: true
 
   # GOLDEN ZSH TEMPLATE
-- name: golden .zshrc
+- name: Golden .zshrc
   ansible.builtin.template:
     src: .zshrc
-    dest: /home/pi/.zshrc
-    owner: pi
-    group: pi
+    dest: '/home/{{ user }}/.zshrc'
+    owner: '{{ user }}'
+    group: '{{ user }}'
     mode: 0644
 
   # GOLDEN THEME FOR ZSH - RACOTECNIC
-- name: golden theme for oh my zsh
+- name: Golden theme for oh my zsh
   become: true
   ansible.builtin.template:
     src: racotecnic.zsh-theme
-    dest: /home/pi/.oh-my-zsh/themes/racotecnic.zsh-theme
-    owner: pi
+    dest: '/home/{{ user }}/.oh-my-zsh/themes/racotecnic.zsh-theme'
+    owner: '{{ user }}'
 
   # SET ZSH AS DEFAULT SHELL FOR PI USER
-- name: set zsh default shell for pi user
+- name: 'Set zsh default shell for {{ user }} user'
   ansible.builtin.user:
-    name: 'pi'
+    name: '{{ user }}'
     shell: /bin/zsh
 
-- name: Add a new user named homepi
-  ansible.builtin.user:
-    name=homepi
-
-- name: Add homepi user to the sudoers
-  ansible.builtin.copy:
-    dest: "/etc/sudoers.d/homepi"
-    content: "homepi  ALL=(ALL)  NOPASSWD: ALL"
-
-- name: Deploy SSH Key
-  authorized_key: user=homepi
-                     key="{{ lookup('file', '~/.ssh/home.pub') }}"
-                     state=present
-
-- name: restart ssh
+- name: Restart SSH service
   ansible.builtin.service:
-    name=sshd
-    state=restarted
+    name: sshd
+    state: restarted
 
 - name: Disable Password Authentication
   ansible.builtin.lineinfile:

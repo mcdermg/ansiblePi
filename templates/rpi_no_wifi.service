@@ -1,0 +1,11 @@
+[Unit]
+Description=Disable Raspberry Pi WiFi interface
+
+[Service]
+Type=oneshot
+ExecStart=rfkill block wifi
+ExecStop=rfkill unblock wifi
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

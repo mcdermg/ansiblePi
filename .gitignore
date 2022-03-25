@@ -5,3 +5,8 @@ hosts.ini
 # Vim swap files
 *.swp
 *.swo
+
+# Vagrant
+**/.vagrant
+**/.vagrant/*
+**/.vagrant/**

@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - '../vars.yml'
+  vars:
+    user: vagrant
+  roles:
+    - keyless
+    - bootstrap
+    - customization
+    - docker
+    - fail2ban
+    - services
+
+  tasks:
+    - name: Print a completionmsg for testing
+      ansible.builtin.debug:
+        msg: Test run of the playbook has completed successfully
+
+  handlers:
+    - name: Restart system
+      ansible.builtin.reboot:
+        pre_reboot_delay: 3
+        msg: "Reboot - initiated by Ansible"
+        test_command: uptime

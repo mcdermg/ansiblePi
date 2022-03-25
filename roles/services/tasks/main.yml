@@ -1,0 +1,35 @@
+# roles/services/tasks/main.yml
+
+### Services ###
+---
+- name: Create no hdmi service
+  ansible.builtin.copy:
+    src: ../../../templates/rpi_no_hdmi.service
+    dest: /etc/systemd/system
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create no wifi service
+  ansible.builtin.copy:
+    src: ../../../templates/rpi_no_wifi.service
+    dest: /etc/systemd/system
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Systemd reread configs
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable & start service rpi_no_wifi
+  ansible.builtin.service:
+    name: rpi_no_wifi
+    enabled: true
+    state: started
+
+# - name: Enable & start service
+#   ansible.builtin.service:
+#     name:
+#     enabled: yes
+#     state: started
