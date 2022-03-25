@@ -20,7 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-# TODO cache brew?
+# TODO check if working?
+      - name: Cache ansible
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/bin/ansible
+          key: ${{ runner.os }}-ansible
+          restore-keys: |
+            ${{ runner.os }}-ansible
+        continue-on-error: true
+
+# TODO Change to simple run command brew install ansible -y or watever as this seems to doan update of brew frist
       - name: Setup Ansible via brew
         uses: lyricwulf/abc@v1
         with:
@@ -48,25 +58,24 @@ jobs:
         continue-on-error: true
 
       - name: Get dir
-        run: |
-          pwd
-          ls -la
+        run: ls -la ~/.vagrant.d/boxes
         continue-on-error: true
 
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
         with:
           path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          #key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          key: ${{ runner.os }}-vagrant
           restore-keys: |
-            ${{ runner.os }}-vagrant-
+            ${{ runner.os }}-vagrant
         continue-on-error: true
 
       - name: Show Vagrant version
         run: vagrant --version
         continue-on-error: true
 
-      - name: Run vagrant up
+      - name: Run vagrant box add
         run: vagrant box add PersistentCoder/raspberry-pi-desktop-32bit
         working-directory: ./tests
         continue-on-error: true
@@ -74,15 +83,6 @@ jobs:
       - name: Run vagrant up
         run: vagrant up --provision
         working-directory: ./tests
-        continue-on-error: true
-
-      - name: Cache Vagrant boxes
-        uses: actions/cache@v2
-        with:
-          path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
-          restore-keys: |
-            ${{ runner.os }}-vagrant-
         continue-on-error: true
 
       - name: Check box dir
