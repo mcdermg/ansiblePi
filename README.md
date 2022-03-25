@@ -1,4 +1,4 @@
-![Ansible Lint](https://github.com/mcdermg/ansiblePi/workflows/Ansible%20Lint/badge.svg?branch=main)
+[![Ansible Lint](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yml/badge.svg?branch=main)](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yml)
 
 [![Test playbook](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yml/badge.svg?branch=main)](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yml)
 
