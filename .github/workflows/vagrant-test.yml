@@ -20,6 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup Ansible
+        run: |
+          sudo easy_install pip
+          sudo pip install ansible
+          ansible --version
+
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
 
