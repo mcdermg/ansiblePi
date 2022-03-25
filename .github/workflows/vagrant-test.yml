@@ -20,7 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-# TODO check if working?
       - name: Cache ansible
         uses: actions/cache@v2
         with:
@@ -30,23 +29,11 @@ jobs:
             ${{ runner.os }}-ansible
         continue-on-error: true
 
-# TODO Change to simple run command brew install ansible -y or watever as this seems to doan update of brew frist
-      - name: Setup Ansible via brew
-        uses: lyricwulf/abc@v1
-        with:
-          macos: ansible
-        continue-on-error: true
-
-      - name: Check Brew Ansible version
+      - name: Brew Install Ansible, Check Brew & Ansible version
         run: |
+          brew --version
           which ansible
           brew install ansible
-        continue-on-error: true
-
-      - name: Check Brew Ansible version
-        run: |
-          which ansible
-          ansible --version
         continue-on-error: true
 
       - name: Setup ansible vault password
@@ -57,48 +44,16 @@ jobs:
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
         continue-on-error: true
 
-      - name: Get dir
-        run: |
-          pwd
-          ls -la
-        continue-on-error: true
-
-      - name: Show vagrant boxes dir
-        run: ls -la ~/.vagrant.d/boxes
-        continue-on-error: true
-
       - name: Cache Vagrant boxes
         uses: actions/cache@v2
         with:
           path: ~/.vagrant.d/boxes
-          #key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
           key: ${{ runner.os }}-vagrant
           restore-keys: |
             ${{ runner.os }}-vagrant
         continue-on-error: true
 
-      - name: Show Vagrant version
-        run: vagrant --version
-        continue-on-error: true
-
-      - name: Run vagrant box add
-        run: vagrant box add PersistentCoder/raspberry-pi-desktop-32bit
-        working-directory: ./tests
-        continue-on-error: true
-
       - name: Run vagrant up
         run: vagrant up --provision
         working-directory: ./tests
-        continue-on-error: true
-
-      - name: Check box dir
-        run: ls -la ~/.vagrant.d/boxes
-        continue-on-error: true
-
-      - name: Post flight check vagrant box for cahcing
-        run: |
-          cd tests
-          ls -la
-          cd .vagrant
-          ls -la
         continue-on-error: true
