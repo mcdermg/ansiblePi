@@ -12,7 +12,7 @@ on:
 
 jobs:
   lint:
-    name: Lint the playbook
+    name: Lint playbook
     runs-on: ubuntu-latest
 
     steps:
