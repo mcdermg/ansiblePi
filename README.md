@@ -11,8 +11,7 @@ The testing folder  contains a vagrant file. This references the roles above and
 
 ### GitHub Actions
 
-A workflow for a GitHub Action that relies on mac OS, which contains Vagrant out of the box, is used in order to run the playbook to verify that all the roles and steps are working.
-
+A workflow for a GitHub Action that relies on mac OS, which contains Vagrant out of the box, is used in order to run the playbook to verify that all the roles and steps are working. This is used so that issues and errors are not discovered when running against physical devices.
 
 #### Skipped steps
 In general a user var is used for the playbook and in the workflow  the `vagrant` user is used as opposed to the Pi user in the actual real world running of the playbook against a physical Raspberry Pi.
