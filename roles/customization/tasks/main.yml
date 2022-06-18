@@ -2,7 +2,6 @@
 
 ### CUSTOMIZATION ###
 ---
-  # APT INSTALL GIT & ZSH
 - name: Install common software
   become: true
   ansible.builtin.package:
@@ -23,7 +22,6 @@
     group: '{{ user }}'
     mode: 0700
 
-  # CREATE MC PANELS.INI
 - name: Golden Midnight Commander panels
   ansible.builtin.template:
     src: panels.ini
@@ -61,7 +59,6 @@
   become_user: '{{ user }}'
   when: not ohmyzsh_result.stat.exists
 
-  # SET PERMISSIONS FOR ZSH USERS
 - name: Set permissions of oh-my-zsh for users
   ansible.builtin.file:
     path: '/home/{{ user }}/.oh-my-zsh'
@@ -71,7 +68,6 @@
     mode: 'go-w'
     recurse: true
 
-  # GOLDEN ZSH TEMPLATE
 - name: Golden .zshrc
   ansible.builtin.template:
     src: .zshrc
@@ -80,15 +76,14 @@
     group: '{{ user }}'
     mode: 0644
 
-  # GOLDEN THEME FOR ZSH - RACOTECNIC
-- name: Golden theme for oh my zsh
+- name: Golden theme for oh my zsh - racotencnic
   become: true
   ansible.builtin.template:
     src: racotecnic.zsh-theme
     dest: '/home/{{ user }}/.oh-my-zsh/themes/racotecnic.zsh-theme'
     owner: '{{ user }}'
+    mode: 0644
 
-  # SET ZSH AS DEFAULT SHELL FOR PI USER
 - name: 'Set zsh default shell for {{ user }} user'
   ansible.builtin.user:
     name: '{{ user }}'
