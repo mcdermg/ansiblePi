@@ -1,4 +1,4 @@
-# roles/fail2ban/tasks/main.yml
+# roles/fail2ban/tasks/main.yaml
 
 ### Fail2Ban ###
 ---

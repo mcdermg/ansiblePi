@@ -1,4 +1,4 @@
-# roles/RPi-Monitor/tasks/main.yml
+# roles/RPi-Monitor/tasks/main.yaml
 
 ### RPi-Monitor ###
 ---

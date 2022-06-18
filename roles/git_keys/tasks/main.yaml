@@ -1,4 +1,4 @@
-# roles/git_keys/tasks/main.yml
+# roles/git_keys/tasks/main.yaml
 
 ### GIT ###
 ---

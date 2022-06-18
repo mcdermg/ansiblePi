@@ -5,7 +5,7 @@
   hosts: all
   become: true
   vars_files:
-    - vars.yml
+    - vars.yaml
   vars:
     user: pi
   roles:

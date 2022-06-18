@@ -1,4 +1,4 @@
-# roles/monitoring/tasks/main.yml
+# roles/monitoring/tasks/main.yaml
 
 ### MONITORING ###
 ---
