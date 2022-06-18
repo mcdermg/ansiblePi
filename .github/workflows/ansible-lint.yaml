@@ -20,5 +20,3 @@ jobs:
 
       - name: Lint Ansible Playbook
         uses: ansible/ansible-lint-action@main
-        with:
-          args: "" # args to pass to ansible-lint command
