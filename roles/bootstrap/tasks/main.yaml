@@ -1,4 +1,4 @@
-# roles/bootstrap/tasks/main.yml
+# roles/bootstrap/tasks/main.yaml
 
 ### BOOTSTRAP ###
 ---

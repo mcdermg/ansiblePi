@@ -1,4 +1,4 @@
-# roles/sensor/tasks/main.yml
+# roles/sensor/tasks/main.yaml
 
 ### Setup for home monitoring ###
 ---

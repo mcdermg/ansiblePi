@@ -1,4 +1,4 @@
-# roles/database/tasks/main.yml
+# roles/database/tasks/main.yaml
 
 ### SETUP DATABASE ###
 ---
