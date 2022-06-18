@@ -2,8 +2,7 @@
 
 ### KEYLESS ACCESS ###
 ---
-# CREATE .ssh DIRECTORY
-- name: Creates SSH directory
+- name: Creates .ssh directory
   ansible.builtin.file:
     path: /home/pi/.ssh
     state: directory
@@ -11,23 +10,20 @@
     group: '{{ user }}'
     mode: 0700
 
-# Personal laptop key
-- name: Set authorized key taken from id rsa pub
+- name: Set authorized key Linux personal
   authorized_key:
     user: '{{ user }}'
     state: present
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
   when: "user == 'pi'"
 
-# Windows key
-- name: Set windows authorized key
+- name: Set authorized key Windows
   authorized_key:
     user: '{{ user }}'
     state: present
     key: "{{ lookup('file', '../../../templates/win.pub') }}"
 
-# Android key
-- name: Set authorized key taken from connectbot on android device
+- name: Set authorized key Android device connectbot
   authorized_key:
     user: '{{ user }}'
     state: present

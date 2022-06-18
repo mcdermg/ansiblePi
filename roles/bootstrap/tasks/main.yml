@@ -2,15 +2,14 @@
 
 ### BOOTSTRAP ###
 ---
-  # UPDATE APT
 - name: Apt get update
   ansible.builtin.apt:
     update-cache: true
 
-  # CHECK IF HOSTNAME IS SET
 - name: Set hostname
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
+
 # TODO revise below as throwing error 20200208 - looked again 20200807
 # Nice to have a check, this is checking host file not o the pi
 #  when: not inventory_hostname | match ('(\d{1,3}\.){3}\d{1,3}')
@@ -32,23 +31,20 @@
 # - name: Set Timezone
 #   ansible.builtin.command: timedatectl set-timezone {{ var_timezone }}
 
-# ENABLE NTP-SYNC
-- name: NTP-SYNC
+- name: Enable NTP-SYNC
   ansible.builtin.command: timedatectl set-ntp true
 
-# Debug local variable manually
-- name: Show loacl variable
+- name: Debug to show value for local variable
   ansible.builtin.debug:
     msg: '{{ var_local }}'
 
 # Alter local
-# Not sorking in Vagrant test run so will skip
+# Not working in Vagrant test run so will skip
 - name: Change locale
   ansible.builtin.command: "raspi-config nonint do_change_locale {{ var_local }}"
   become: true
   when: "user == 'pi'"
 
-  # SET STATIC IP
 - name: Set Static IP
   ansible.builtin.blockinfile:
     path: /etc/dhcpcd.conf
@@ -61,7 +57,6 @@
       static domain_name_servers={{ static_dns }}
   ignore_errors: true
 
-  # CHANGE DEFAULT PASSWORD
 - name: Change user's password
   ansible.builtin.user:
     name: pi
