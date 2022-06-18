@@ -1,6 +1,6 @@
-[![Ansible Lint](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yaml/badge.svg?branch=main)](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yaml)
+[![Ansible Lint](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yaml/badge.svg)](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yaml)
 
-[![Test playbook](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yaml/badge.svg?branch=main)](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yaml)
+[![Test playbook](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yaml/badge.svg)](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yaml)
 
 # ansiblePi
 Ansible playbook &amp; roles for Raspberry Pi setup. This bootstraps and customizes the Pi/s and installs various software that I got tired of doing manually.
