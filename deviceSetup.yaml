@@ -2,18 +2,19 @@
 ---
 
 - name: Basic Setup
-  hosts: all
+  hosts: zero
   become: true
   vars_files:
     - vars.yaml
   vars:
     user: pi
+
   roles:
     - {role: keyless}
     - {role: bootstrap}
-    - {role: customization}
+#    - {role: customization}
     - {role: docker}
-#    - { role: fail2ban }
+#    - {role: fail2ban}
 #    - { role: services } # TODO fix services and verify working
 #    - { role: git_keys}
 # TODO review below, refactor as monitoring needed others seperate playbook

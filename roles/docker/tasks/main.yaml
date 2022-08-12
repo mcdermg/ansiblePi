@@ -20,5 +20,5 @@
     groups: docker
     append: true
   when: not docker_result.stat.exists
-  notify:
-    - Restart system
+#  notify:
+#    - Restart system

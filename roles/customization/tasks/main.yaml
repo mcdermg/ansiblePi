@@ -103,3 +103,4 @@
     backup=yes
   notify:
     - Restart system
+    - Restart system
