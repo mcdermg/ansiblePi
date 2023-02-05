@@ -814,4 +814,3 @@ site: {{ datadog_site }}
 ## If enabled the Agent will log using the RFC3339 format for the log time.
 #
 # log_format_rfc3339: false
-
