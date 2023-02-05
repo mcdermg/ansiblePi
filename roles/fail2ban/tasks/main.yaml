@@ -10,6 +10,7 @@
     cache_valid_time: 3600
   with_items:
     - fail2ban
+  when: '"fail2ban" not in ansible_facts.packages'
 
 - name: Check if fail2ban config already in place
   ansible.builtin.stat:

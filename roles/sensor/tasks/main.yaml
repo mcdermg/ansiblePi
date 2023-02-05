@@ -8,12 +8,12 @@
 # RPi.GPIO as GPIO
 # import dht11
 # No longer using below but needs updating to above + more and maybe requirements
-- name: python pip install Adafruit_DHT
+- name: Python pip install Adafruit_DHT
   ansible.builtin.pip:
     name: Adafruit_DHT
     executable: pip
 
-- name: clone homeMonitoring repository
+- name: Clone homeMonitoring repository
   ansible.builtin.git:
     repo: git@github.com:mcdermg/homeMonitoring.git
     dest: /home/pi/repos/homeMonitoring

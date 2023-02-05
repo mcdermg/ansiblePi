@@ -3,7 +3,7 @@
 ### MONITORING ###
 ---
 - name: Populate installed packages
-  package_facts:
+  ansible.builtin.package_facts:
     manager: "auto"
 
 - name: Check if datadog config file exists

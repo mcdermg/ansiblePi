@@ -2,13 +2,13 @@
 
 ### RPi-Monitor ###
 ---
-- name: check if RPi-Monitor exists already
+- name: Check if RPi-Monitor exists already
   ansible.builtin.stat:
     path: /etc/rpimonitor/
   become: true
   register: stat_result
 
-- name: apt install dirmngr for RPi-Monitor
+- name: Apt install dirmngr for RPi-Monitor
   ansible.builtin.apt:
     update-cache: true
     pkg: dirmngr
@@ -32,7 +32,7 @@
     mode: 644
   when: not stat_result.stat.exists
 
-- name: apt install RPi-Monitor
+- name: Apt install RPi-Monitor
   ansible.builtin.apt:
     update-cache: true
     pkg: rpimonitor

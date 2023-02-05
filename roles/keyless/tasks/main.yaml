@@ -11,20 +11,20 @@
     mode: 0700
 
 - name: Set authorized key Linux personal
-  authorized_key:
+  ansible.posix.authorized_key:
     user: '{{ user }}'
     state: present
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
   when: "user == 'pi'"
 
 - name: Set authorized key Windows
-  authorized_key:
+  ansible.posix.authorized_key:
     user: '{{ user }}'
     state: present
     key: "{{ lookup('file', '../../../templates/win.pub') }}"
 
 - name: Set authorized key Android device connectbot
-  authorized_key:
+  ansible.posix.authorized_key:
     user: '{{ user }}'
     state: present
     key: "{{ lookup('file', '../../../templates/android.pub') }}"

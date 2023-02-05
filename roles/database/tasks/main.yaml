@@ -2,7 +2,7 @@
 
 ### SETUP DATABASE ###
 ---
-- name: apt-get update
+- name: APT-get update
   ansible.builtin.apt:
     update-cache: true
   become: true
@@ -28,7 +28,7 @@
     enabled: true
   become: true
 
-- name: update mysql root password for all root accounts
+- name: Update mysql root password for all root accounts
   mysql_user:
     name: root
     host: "{{ item }}"

@@ -2,6 +2,14 @@
 
 ### CUSTOMIZATION ###
 ---
+- name: Populate installed packages
+  ansible.builtin.package_facts:
+    manager: "auto"
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+  register: services_state
+
 - name: Install common software
   become: true
   ansible.builtin.package:
@@ -13,6 +21,15 @@
     - zsh
     - mc
     - ncdu
+    - tree
+    - vim
+  when: |
+        ('"git" not in ansible_facts.packages') or
+        ('"zsh" not in ansible_facts.packages') or
+        ('"mc" not in ansible_facts.packages') or
+        ('"ncdu" not in ansible_facts.packages') or
+        ('"tree" not in ansible_facts.packages') or
+        ('"vim" not in ansible_facts.packages')
 
 - name: Create config/mc directory if it does not exist
   ansible.builtin.file:
@@ -84,7 +101,7 @@
     owner: '{{ user }}'
     mode: 0644
 
-- name: 'Set zsh default shell for {{ user }} user'
+- name: 'Set zsh default shell for user: {{ user }}'
   ansible.builtin.user:
     name: '{{ user }}'
     shell: /bin/zsh
@@ -102,5 +119,4 @@
     state=present
     backup=yes
   notify:
-    - Restart system
-    - Restart system
+    - Restart

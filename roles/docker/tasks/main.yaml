@@ -2,23 +2,22 @@
 
 ### DOCKER ###
 ---
-- name: Check if Docker is installed
-  ansible.builtin.stat:
-    path: /usr/bin/docker
-  register: docker_result
+- name: Populate installed packages
+  ansible.builtin.package_facts:
+    manager: "auto"
 
 - name: Update apt and install docker.io
   ansible.builtin.apt:
     update_cache: true
     name: docker.io
     state: present
-  when: not docker_result.stat.exists
+  when: '"docker.io" not in ansible_facts.packages'
 
 - name: Give the pi user the ability to run Docker
   ansible.builtin.user:
     name: pi
     groups: docker
     append: true
-  when: not docker_result.stat.exists
-#  notify:
-#    - Restart system
+  when: '"docker.io" not in ansible_facts.packages'
+  notify:
+    - Restart
