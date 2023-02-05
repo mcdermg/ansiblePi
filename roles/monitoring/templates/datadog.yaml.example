@@ -6,14 +6,14 @@
 ## @param api_key - string - required
 ## The Datadog API key to associate your Agent's data with your organization.
 ## Create a new API key here: https://app.datadoghq.com/account/settings
-
-api_key: {{ datadog_api_key }}
+#
+api_key:
 
 ## @param site - string - optional - default: datadoghq.com
 ## The site of the Datadog intake to send Agent data to.
 ## Set to 'datadoghq.eu' to send data to the EU site.
-
-site: {{ datadog_site }}
+#
+# site: datadoghq.com
 
 ## @param dd_url - string - optional - default: https://app.datadoghq.com
 ## The host of the Datadog intake server to send metrics to, only set this option
@@ -21,7 +21,7 @@ site: {{ datadog_site }}
 ## setting defined in "site". It does not affect APM, Logs or Live Process intake which have their
 ## own "*_dd_url" settings.
 #
-# dd_url: https://app.datadoghq.com # /////////\\\\\\\----------------
+# dd_url: https://app.datadoghq.com
 
 ## @param proxy - custom object - optional
 ## If you need a proxy to connect to the Internet, provide it here (default:

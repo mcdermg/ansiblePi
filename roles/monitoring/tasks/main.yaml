@@ -2,6 +2,10 @@
 
 ### MONITORING ###
 ---
+- name: Populate installed packages
+  package_facts:
+    manager: "auto"
+
 - name: Check if datadog config file exists
   ansible.builtin.stat:
     path: /etc/datadog-agent/datadog.yaml
@@ -11,10 +15,12 @@
   ansible.builtin.apt:
     deb: "{{ datadog_url }}"
     # saved the deb file to S3 but still pulling from ddog. check terraform state bucket
-    # if ever this stops working as know this c=version does the business.
-  when: not ddog_config_file.stat.exists
+    # if ever this stops working as know this version does the business. But does it? - Feb2023
+  when: '"datadog-agent" not in ansible_facts.packages'
 
 # TODO Need to check this someething not working - unknown date...
+# again feb 2023 this does though DD_AGENT_FLAVOR='datadog-iot-agent' DD_API_KEY=cb9dcc97630e14921d8a14f2ef798442 DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script_agent7.sh)"
+# see https://app.datadoghq.com/dashboard/g5r-uc8-7ea/raspberry?from_ts=1675565765814&to_ts=1675569365814&live=true
 - name: Add datadog config
   ansible.builtin.template:
     src: datadog.yaml.js
@@ -29,4 +35,4 @@
     name: datadog-agent
     enabled: true
     state: started
-  when: not ddog_config_file.stat.exists
+  when: '"datadog-agent" not in ansible_facts.packages'
