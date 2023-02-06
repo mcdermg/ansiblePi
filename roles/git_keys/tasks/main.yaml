@@ -2,44 +2,52 @@
 
 ### GIT ###
 ---
-# - name: Generate ssh key
-#   openssh_keypair:
-#     path: /home/pi/.ssh/id_rsa
-#
+# - name: Print a message
+#   ansible.builtin.debug:
+#     msg: '{{ username }}'
+
+- name: Check ssh key exists on remote
+  stat:
+    path: /home/pi/.ssh/id_rsa
+  register: ssk_key
+
+- name: Generate ssh key
+  openssh_keypair:
+    path: /home/pi/.ssh/id_rsa
+  when: not ssk_key.stat.exists
+
 - name: Read SSH public key to authorize
   ansible.builtin.command: cat /home/pi/.ssh/id_rsa.pub
   register: ssh_pub_key
-#
-# - name: Ensure git is present
-#   ansible.builtin.apt:
-#     name: git
-#     state: present
-#   become: true
 
-# - name: Authorize key with GitHub
-#   local_action:
-#     module: github_key
-#     name: 'pi-{{ ansible_hostname }}'
-#     token: '{{ github_access_token }}'
-#     pubkey: '{{ ssh_pub_key.stdout }}'
+- name: Ensure git is present
+  ansible.builtin.apt:
+    name: git
+    state: present
+  become: true
 
 - name: Add key to GitHub
   local_action:
     module: github_key
-#    api_user: "mcdermg@tcd.ie"
-    api_token: '{{ github_access_token }}'
-    key_title: 'pi-{{ ansible_hostname }}'
-    key_file: '{{ ssh_pub_key.stdout }}'
+    name: 'pi-{{ ansible_hostname }}'
+    token: '{{ github_access_token }}'
+    pubkey: '{{ ssh_pub_key.stdout }}'
   delegate_to: 127.0.0.1
+  become: true
+  become_user: 'garymcdermott' #'{{ username }}' # TODO this is an issue as not always this user so hopw to determine the user whenusing become true form the off
 
 - name: Set git config email
   git_config:
     name: user.email
     scope: global
     value: '{{ git_user_email }}'
+  become: yes
+  become_user: '{{ user }}'
 
 - name: Set git config username
   git_config:
     name: user.name
     scope: global
     value: '{{ git_user_name }}'
+  become: yes
+  become_user: '{{ user }}'
