@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Cache ansible
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /usr/local/bin/ansible
           key: ${{ runner.os }}-ansible

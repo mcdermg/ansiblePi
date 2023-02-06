@@ -2,26 +2,35 @@
 
 ### GIT ###
 ---
-- name: Generate ssh key
-  openssh_keypair:
-    path: /home/pi/.ssh/id_rsa
-
+# - name: Generate ssh key
+#   openssh_keypair:
+#     path: /home/pi/.ssh/id_rsa
+#
 - name: Read SSH public key to authorize
   ansible.builtin.command: cat /home/pi/.ssh/id_rsa.pub
   register: ssh_pub_key
+#
+# - name: Ensure git is present
+#   ansible.builtin.apt:
+#     name: git
+#     state: present
+#   become: true
 
-- name: Ensure git is present
-  ansible.builtin.apt:
-    name: git
-    state: present
-  become: true
+# - name: Authorize key with GitHub
+#   local_action:
+#     module: github_key
+#     name: 'pi-{{ ansible_hostname }}'
+#     token: '{{ github_access_token }}'
+#     pubkey: '{{ ssh_pub_key.stdout }}'
 
-- name: Authorize key with GitHub
+- name: Add key to GitHub
   local_action:
     module: github_key
-    name: 'pi-{{ ansible_hostname }}'
-    token: '{{ github_access_token }}'
-    pubkey: '{{ ssh_pub_key.stdout }}'
+#    api_user: "mcdermg@tcd.ie"
+    api_token: '{{ github_access_token }}'
+    key_title: 'pi-{{ ansible_hostname }}'
+    key_file: '{{ ssh_pub_key.stdout }}'
+  delegate_to: 127.0.0.1
 
 - name: Set git config email
   git_config:
