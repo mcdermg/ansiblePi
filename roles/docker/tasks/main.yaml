@@ -6,15 +6,16 @@
   ansible.builtin.package_facts:
     manager: "auto"
 
+- name: Run apt-get update
+  ansible.builtin.apt:
+    update_cache: yes
+
 - name: Install docker.io & docker-compose
   ansible.builtin.apt:
-    update_cache: true
-    name: '{{ item }}'
-    state: present
-  with_items:
+    pkg:
     - docker.io
     - docker-compose
-  when: ('"docker.io" not in ansible_facts.packages')
+    state: present
   when: |
          ('"docker.io" not in ansible_facts.packages') or
          ('"docker-compose" not in ansible_facts.packages')
@@ -27,3 +28,54 @@
   when: '"docker.io" not in ansible_facts.packages'
   notify:
     - Restart
+
+- name: Join dockerhub username & credential
+  set_fact:
+    dockerhub_login: "{{ dockerhub_username }}:{{ dockerhub_password }}"
+
+- name: Base64 encode dockerhub login for config file
+  set_fact:
+    dockerhub_login_encoded: "{{ dockerhub_login | b64encode }}"
+
+# - name: Display normal result
+#   debug:
+#     var: dockerhub_login
+#
+# - name: Display encoded result
+#   debug:
+#     var: dockerhub_login_encoded
+
+- name: Log into DockerHub
+  community.docker.docker_login:
+    username: '{{ dockerhub_username }}'
+    password: '{{ dockerhub_password }}'
+    reauthorize: true
+
+- name: Check if docker config directory exists
+  stat:
+    path: /home/pi/.docker/
+  register: docker_dir_status
+
+- name: Create directory for template file
+  file:
+    path: /home/pi/.docker/
+    state: directory
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0755
+  when: docker_dir_status.stat.exists == false
+
+- name: Create dockerhub config file on server
+  ansible.builtin.template:
+    src: config.json.js
+    dest: /home/pi/.docker/config.json
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0600
+  when: docker_dir_status.stat.exists == false
+
+- name: Log into DockerHub
+  community.docker.docker_login:
+    username: '{{ dockerhub_username }}'
+    password: '{{ dockerhub_password }}'
+    reauthorize: true
