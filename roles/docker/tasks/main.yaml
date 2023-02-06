@@ -37,14 +37,6 @@
   set_fact:
     dockerhub_login_encoded: "{{ dockerhub_login | b64encode }}"
 
-# - name: Display normal result
-#   debug:
-#     var: dockerhub_login
-#
-# - name: Display encoded result
-#   debug:
-#     var: dockerhub_login_encoded
-
 - name: Log into DockerHub
   community.docker.docker_login:
     username: '{{ dockerhub_username }}'
