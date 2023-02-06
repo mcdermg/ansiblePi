@@ -6,12 +6,18 @@
   ansible.builtin.package_facts:
     manager: "auto"
 
-- name: Update apt and install docker.io
+- name: Install docker.io & docker-compose
   ansible.builtin.apt:
     update_cache: true
-    name: docker.io
+    name: '{{ item }}'
     state: present
-  when: '"docker.io" not in ansible_facts.packages'
+  with_items:
+    - docker.io
+    - docker-compose
+  when: ('"docker.io" not in ansible_facts.packages')
+  when: |
+         ('"docker.io" not in ansible_facts.packages') or
+         ('"docker-compose" not in ansible_facts.packages')
 
 - name: Give the pi user the ability to run Docker
   ansible.builtin.user:
