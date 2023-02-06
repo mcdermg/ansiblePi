@@ -8,6 +8,7 @@
     - vars.yaml
   vars:
     user: pi
+
   # vars_prompt:
   #   - name: username
   #     prompt: What is your localhost username?

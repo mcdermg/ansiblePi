@@ -7,7 +7,7 @@
 #     msg: '{{ username }}'
 
 - name: Check ssh key exists on remote
-  stat:
+  ansible.builtin.stat:
     path: /home/pi/.ssh/id_rsa
   register: ssk_key
 
@@ -34,14 +34,15 @@
     pubkey: '{{ ssh_pub_key.stdout }}'
   delegate_to: 127.0.0.1
   become: true
-  become_user: 'garymcdermott' #'{{ username }}' # TODO this is an issue as not always this user so hopw to determine the user whenusing become true form the off
+  # TODO is an issue as not always this user so hopw to determine the user whenusing become true form the off
+  become_user: 'garymcdermott' # '{{ username }}'
 
 - name: Set git config email
   git_config:
     name: user.email
     scope: global
     value: '{{ git_user_email }}'
-  become: yes
+  become: true
   become_user: '{{ user }}'
 
 - name: Set git config username
@@ -49,5 +50,5 @@
     name: user.name
     scope: global
     value: '{{ git_user_name }}'
-  become: yes
+  become: true
   become_user: '{{ user }}'
