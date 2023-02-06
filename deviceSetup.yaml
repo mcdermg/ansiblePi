@@ -1,29 +1,30 @@
-# Raspberry Pi device setup - Gary Mc Dermott 2019
+# Raspberry Pi device setup - Gary Mc Dermott 2019 - 2023
 ---
 
-- name: Basic Setup
-  hosts: four
+- name: Setup
+  hosts: nodes
   become: true
   vars_files:
     - vars.yaml
   vars:
     user: pi
+  # vars_prompt:
+  #   - name: username
+  #     prompt: What is your localhost username?
+  #     private: false
 
   roles:
 #    - {role: keyless}
 #    - {role: bootstrap}
 #    - {role: customization}
-    - {role: docker}
-#    - {role: fail2ban}
-#    - { role: services } # TODO fix services and verify working
-#    - { role: git_keys}
+    - {role: docker, when: model_four == 'true'}
+    - {role: fail2ban}
+    - { role: git_keys}
+    - { role: monitoring }
+    #    - { role: services } # TODO fix services and verify working
 # TODO review below, refactor as monitoring needed others seperate playbook
-#    - { role: monitoring }
 #    - { role: datadog.datadog, become: true }
 #    - { role: monitoring , when: model_four }
 #    - { role: rpi_monitor }
 #    - { role: sensor , tags: [ "sensor" ] }
 #    - { role: sensor }
-# TODO this is going in home lab so remove
-#    - { role: docker , when: model_four }
-#    - { role: database , when: model_three }
