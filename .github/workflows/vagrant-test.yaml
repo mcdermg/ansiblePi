@@ -17,7 +17,7 @@ on:
 jobs:
   vagrant_test:
     name: Test playbook on Vagrant box
-    runs-on: macos-10.15
+    runs-on: macOS 11
 
     steps:
       - uses: actions/checkout@v2
@@ -30,14 +30,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ansible
 
-      - uses: ConorMacBride/install-package@v1
-        with:
-          brew: ansible
-
-      # - name: Setup Ansible via brew
-      #   uses: lyricwulf/abc@v1
+      # - uses: ConorMacBride/install-package@v1
       #   with:
-      #     macos: ansible
+      #     brew: ansible
+
+      - name: Setup Ansible via brew
+        uses: lyricwulf/abc@v1
+        with:
+          macos: ansible
 
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
