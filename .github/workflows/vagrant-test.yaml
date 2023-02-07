@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - test-brew-action
   pull_request:
     branches:
       - main
@@ -29,10 +30,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ansible
 
-      - name: Setup Ansible via brew
-        uses: lyricwulf/abc@v1
+      - uses: ConorMacBride/install-package@v1
         with:
-          macos: ansible
+          brew: ansible
+
+      # - name: Setup Ansible via brew
+      #   uses: lyricwulf/abc@v1
+      #   with:
+      #     macos: ansible
 
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
