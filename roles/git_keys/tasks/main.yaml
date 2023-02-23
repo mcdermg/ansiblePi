@@ -2,9 +2,9 @@
 
 ### GIT ###
 ---
-# - name: Print a message
-#   ansible.builtin.debug:
-#     msg: '{{ username }}'
+- name: Populate installed packages
+  ansible.builtin.package_facts:
+    manager: "auto"
 
 - name: Check ssh key exists on remote
   ansible.builtin.stat:
@@ -14,6 +14,8 @@
 - name: Generate ssh key
   openssh_keypair:
     path: /home/pi/.ssh/id_rsa
+    owner: '{{ user }}'
+    group: '{{ user }}'
   when: not ssk_key.stat.exists
 
 - name: Read SSH public key to authorize
@@ -34,8 +36,8 @@
     pubkey: '{{ ssh_pub_key.stdout }}'
   delegate_to: 127.0.0.1
   become: true
-  # TODO is an issue as not always this user so hopw to determine the user whenusing become true form the off
-  become_user: 'garymcdermott' # '{{ username }}'
+  # TODO is an issue as not always this user so hop to determine the user when using become true form the off
+  become_user: 'gary' # '{{ username }}'
 
 - name: Set git config email
   git_config:
