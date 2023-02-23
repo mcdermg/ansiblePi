@@ -34,7 +34,7 @@
     dockerhub_login: "{{ dockerhub_username }}:{{ dockerhub_password }}"
 
 - name: Base64 encode dockerhub login for config file
-  ansible.builtin.stat:
+  ansible.builtin.set_fact:
     dockerhub_login_encoded: "{{ dockerhub_login | b64encode }}"
 
 - name: Check if docker config directory exists
