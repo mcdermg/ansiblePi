@@ -15,17 +15,13 @@
   #     private: false
 
   roles:
-#    - {role: keyless}
-#    - {role: bootstrap}
-#    - {role: customization}
-#    - {role: docker, when: model_four == 'true'}
-#    - {role: fail2ban}
-#    - { role: git_keys}
-    - { role: monitoring }
+#    - { role: keyless }
+#    - { role: bootstrap }
+#    - { role: customization }
+#    - { role: docker, when: model_four == 'true'}
+#    - { role: fail2ban }
+#    - { role: git_keys }
+#    - { role: monitoring }
+#    - { role: docker, when: model_four == 'true' }
+    - { role: mount, when: model_four == 'true' }
 #    - { role: services } # TODO fix services and verify working
-# TODO review below, refactor as monitoring needed others seperate playbook
-#    - { role: datadog.datadog, become: true }
-#    - { role: monitoring , when: model_four }
-#    - { role: rpi_monitor }
-#    - { role: sensor , tags: [ "sensor" ] }
-#    - { role: sensor }

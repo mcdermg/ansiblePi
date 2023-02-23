@@ -1,0 +1,39 @@
+# roles/mount/tasks/main.yaml
+
+### Mount ###
+---
+- name: Create mount point
+  ansible.builtin.file:
+    path: /mnt/nas
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Mount SSD
+  ansible.builtin.mount:
+    src: /dev/sdb1
+    path: /mnt/nas
+    fstype: ext4
+    state: mounted
+    opts: defaults
+
+- name: Install samba
+  ansible.builtin.package:
+    name: samba
+    state: latest
+
+- name: Create samba share
+  community.general.udm_share:
+    name: nas
+    path: /mnt/nas/nas
+    sambaWriteList: '@users'
+    host: '192.168.0.66'
+    sambaName: nas
+    sambaPublic: false
+
+# - name: Add user to group
+#   ansible.builtin.user:
+#     name: gary
+#     groups: users
+#     append: yes
