@@ -2,7 +2,11 @@
 
 ### Fail2Ban ###
 ---
-- name: Install fail2ban package apt
+- name: Populate installed packages
+  ansible.builtin.package_facts:
+    manager: "auto"
+
+- name: Install fail2ban apt package
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
@@ -19,7 +23,7 @@
 
 - name: Override the basic fail2ban configuration with .local file
   ansible.builtin.copy:
-    src: '../../templates/fail2ban.config'
+    src: fail2ban.config
     dest: /etc/fail2ban/jail.local
     owner: root
     group: root
