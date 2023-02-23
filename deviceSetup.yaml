@@ -22,7 +22,7 @@
 #    - {role: fail2ban}
 #    - { role: git_keys}
     - { role: monitoring }
-    #    - { role: services } # TODO fix services and verify working
+#    - { role: services } # TODO fix services and verify working
 # TODO review below, refactor as monitoring needed others seperate playbook
 #    - { role: datadog.datadog, become: true }
 #    - { role: monitoring , when: model_four }
