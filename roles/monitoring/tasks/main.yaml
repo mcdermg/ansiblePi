@@ -6,17 +6,57 @@
   ansible.builtin.package_facts:
     manager: "auto"
 
+# See https://github.com/DataDog/ansible-datadog/blob/3c2c471bd477b48e00d4fdeac5aedd847a77886c/defaults/main.yml#L87
+#  - key: "DATADOG_APT_KEY_CURRENT"
+#    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public
+#  - key: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+#    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public
+#  - key: D75CEA17048B9ACBF186794B32637D44F14F620E
+#    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public
+
+- name: Add DataDog Apt signing key 1
+  ansible.builtin.apt_key:
+    id: D75CEA17048B9ACBF186794B32637D44F14F620E
+    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public'
+    keyring: /usr/share/keyrings/datadog-archive-keyring.gp
+    state: present
+  when: '"datadog-iot-agent" not in ansible_facts.packages'
+
+# Seems this is not needed as can install from others
+# - name: Add DataDog Apt signing key 2
+#   ansible.builtin.apt_key:
+#     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+#     url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public'
+#     keyring: /usr/share/keyrings/datadog-archive-keyring.gp
+#     state: present
+#   when: '"datadog-iot-agent" not in ansible_facts.packages'
+
+- name: Add DataDog Apt signing key 3
+  ansible.builtin.apt_key:
+    id: D75CEA17048B9ACBF186794B32637D44F14F620E
+    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public'
+    keyring: /usr/share/keyrings/datadog-archive-keyring.gp
+    state: present
+  when: '"datadog-iot-agent" not in ansible_facts.packages'
+
+- name: Add datadog apt source
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.datadoghq.com/ stable 7"
+    state: present
+    filename: datadog
+  when: '"datadog-iot-agent" not in ansible_facts.packages'
+
+- name: Install Datadog IoT agent 7
+  ansible.builtin.apt:
+    name: datadog-iot-agent
+    state: present
+    update_cache: true
+  when: '"datadog-iot-agent" not in ansible_facts.packages'
+
 - name: Check if datadog config file exists
   ansible.builtin.stat:
     path: /etc/datadog-agent/datadog.yaml
   register: ddog_config_file
-
-- name: Install Datadog iot agent 7
-  ansible.builtin.apt:
-    deb: "{{ datadog_url }}"
-    # saved the deb file to S3 but still pulling from ddog. check terraform state bucket
-    # if ever this stops working as know this version does the business. But does it? - Feb2023
-  when: '"datadog-agent" not in ansible_facts.packages'
 
 - name: Add datadog config
   ansible.builtin.template:
@@ -32,4 +72,4 @@
     name: datadog-agent
     enabled: true
     state: started
-  when: '"datadog-agent" not in ansible_facts.packages'
+  when: '"datadog-iot-agent" not in ansible_facts.packages'
