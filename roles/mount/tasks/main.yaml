@@ -11,7 +11,7 @@
     mode: 0755
 
 - name: Mount SSD
-  ansible.builtin.mount:
+  ansible.posix.mount:
     src: /dev/sdb1
     path: /mnt/nas
     fstype: ext4
@@ -23,14 +23,15 @@
     name: samba
     state: latest
 
-- name: Create samba share
-  community.general.udm_share:
-    name: nas
-    path: /mnt/nas/nas
-    sambaWriteList: '@users'
-    host: '192.168.0.66'
-    sambaName: nas
-    sambaPublic: false
+# - name: Create samba share
+#   community.general.udm_share:
+#     name: nas
+#     path: /mnt/nas/nas
+#     sambaWriteList: '@users'
+#     host: '192.168.0.66'
+#     sambaName: nas
+#     ou: ''
+#     sambaPublic: false
 
 # - name: Add user to group
 #   ansible.builtin.user:

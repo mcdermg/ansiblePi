@@ -9,11 +9,6 @@
   vars:
     user: pi
 
-  # vars_prompt:
-  #   - name: username
-  #     prompt: What is your localhost username?
-  #     private: false
-
   roles:
 #    - { role: keyless }
 #    - { role: bootstrap }
