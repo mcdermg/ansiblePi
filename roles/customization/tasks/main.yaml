@@ -23,8 +23,7 @@
     - ncdu
     - tree
     - vim
-  when: |
-        ('"git" not in ansible_facts.packages') or
+  when: ('"git" not in ansible_facts.packages') or
         ('"zsh" not in ansible_facts.packages') or
         ('"mc" not in ansible_facts.packages') or
         ('"ncdu" not in ansible_facts.packages') or

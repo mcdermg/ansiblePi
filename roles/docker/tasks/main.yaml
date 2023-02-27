@@ -16,9 +16,8 @@
       - docker.io
       - docker-compose
     state: present
-  when: |
-         ('"docker.io" not in ansible_facts.packages') or
-         ('"docker-compose" not in ansible_facts.packages')
+  when: ('"docker.io" not in ansible_facts.packages') or
+        ('"docker-compose" not in ansible_facts.packages')
 
 - name: Give the pi user the ability to run Docker
   ansible.builtin.user:
