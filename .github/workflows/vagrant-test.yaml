@@ -31,7 +31,7 @@ jobs:
       - name: Set up VirtualBox
         run: |
           sudo apt-get update
-          sudo apt-get install virtualbox
+          sudo apt-get install -y virtualbox
 
       # - name: Cache ansible
       #   uses: actions/cache@v3
@@ -48,6 +48,9 @@ jobs:
 
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
+
+      - name: Create SSH directory
+        run: mkdir -p ~/.ssh
 
       - name: Setup pub key for keyless role
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
