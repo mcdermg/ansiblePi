@@ -55,13 +55,13 @@ jobs:
       - name: Setup pub key for keyless role
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
 
-      # - name: Cache Vagrant boxes
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ~/.vagrant.d/boxes
-      #     key: ${{ runner.os }}-vagrant
-      #     restore-keys: |
-      #       ${{ runner.os }}-vagrant
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v3
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant
+          restore-keys: |
+            ${{ runner.os }}-vagrant
 
       - name: Run vagrant up
         run: vagrant up --provision
