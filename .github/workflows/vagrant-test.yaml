@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - actions-vagrant-change
   pull_request:
     branches:
       - main
@@ -12,27 +13,38 @@ on:
       - reopened
   workflow_dispatch:
 
-
 jobs:
   vagrant_test:
     name: Test playbook on Vagrant box
-    runs-on: macos-11
+    runs-on: ubuntu-latest #macos-11
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Cache ansible
-        uses: actions/cache@v3
-        with:
-          path: /usr/local/bin/ansible
-          key: ${{ runner.os }}-ansible
-          restore-keys: |
-            ${{ runner.os }}-ansible
+      - name: Set up Vagrant
+        # wget https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.deb
+        run: |
+          wget https://releases.hashicorp.com/vagrant/2.3.7/vagrant_2.3.7-1_amd64.deb
+          sudo dpkg -i vagrant_2.3.7-1_amd64.deb
 
-      - name: Setup Ansible via brew
-        uses: lyricwulf/abc@v1
-        with:
-          macos: ansible
+      - name: Set up VirtualBox
+        run: |
+          sudo apt-get update
+          sudo apt-get install virtualbox
+
+      # - name: Cache ansible
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: /usr/local/bin/ansible
+      #     key: ${{ runner.os }}-ansible
+      #     restore-keys: |
+      #       ${{ runner.os }}-ansible
+      #
+      # - name: Setup Ansible via brew
+      #   uses: lyricwulf/abc@v1
+      #   with:
+      #     macos: ansible
 
       - name: Setup ansible vault password
         run: printf ${{ secrets.VAULT_PASS }} > .vault_pass
@@ -40,13 +52,13 @@ jobs:
       - name: Setup pub key for keyless role
         run: printf ${{ secrets.PUB_KEY }} > ~/.ssh/id_rsa.pub
 
-      - name: Cache Vagrant boxes
-        uses: actions/cache@v3
-        with:
-          path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant
-          restore-keys: |
-            ${{ runner.os }}-vagrant
+      # - name: Cache Vagrant boxes
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.vagrant.d/boxes
+      #     key: ${{ runner.os }}-vagrant
+      #     restore-keys: |
+      #       ${{ runner.os }}-vagrant
 
       - name: Run vagrant up
         run: vagrant up --provision
