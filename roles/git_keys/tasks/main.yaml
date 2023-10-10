@@ -18,28 +18,22 @@
     group: '{{ user }}'
   when: not ssk_key.stat.exists
 
-- name: Read SSH public key to authorize
-  ansible.builtin.command: cat /home/pi/.ssh/id_rsa.pub
-  register: ssh_pub_key
-  check_mode: false
-  when: not ssh_pub_key.stdout
+- name: Read SSH public key file
+  ansible.builtin.slurp:
+    src: /home/pi/.ssh/id_rsa.pub
+  register: ssh_pub_key_content
+
+- name: Add key to GitHub
+  community.general.github_key:
+    name: 'pi-{{ ansible_hostname }}'
+    token: '{{ github_access_token }}'
+    pubkey: '{{ ssh_pub_key_content.content | b64decode }}'
 
 - name: Ensure git is present
   ansible.builtin.apt:
     name: git
     state: present
   become: true
-
-- name: Add key to GitHub
-  delegate_to: localhost
-  ansible.builtin.command:
-    module: github_key
-    name: 'pi-{{ ansible_hostname }}'
-    token: '{{ github_access_token }}'
-    pubkey: '{{ ssh_pub_key.stdout }}'
-  become: true
-  # TODO is an issue as not always this user so hop to determine the user when using become true form the off
-  become_user: 'gary' # '{{ username }}'
 
 - name: Set git config email
   community.general.git_config:
