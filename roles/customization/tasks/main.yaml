@@ -89,6 +89,7 @@
     repo: 'https://github.com/robbyrussell/oh-my-zsh.git'
     dest: '/home/{{ user }}/.oh-my-zsh'
     version: master
+  become: true
   become_user: '{{ user }}'
   when: not ohmyzsh_result.stat.exists
 
