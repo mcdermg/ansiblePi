@@ -47,7 +47,7 @@
     state: directory
     owner: '{{ user }}'
     group: '{{ user }}'
-    mode: 0755
+    mode: '0755'
   when: not docker_dir_status.stat.exists
 
 - name: Create dockerhub config file on server
@@ -56,7 +56,7 @@
     dest: /home/pi/.docker/config.json
     owner: '{{ user }}'
     group: '{{ user }}'
-    mode: 0600
+    mode: '0600'
   when: not docker_dir_status.stat.exists
 
 - name: Log into DockerHub

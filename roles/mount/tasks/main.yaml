@@ -8,7 +8,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: '0755'
 
 - name: Mount SSD
   ansible.posix.mount:
@@ -21,7 +21,7 @@
 - name: Install samba
   ansible.builtin.package:
     name: samba
-    state: latest
+    state: present
 
 # - name: Create samba share
 #   community.general.udm_share:

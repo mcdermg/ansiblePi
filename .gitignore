@@ -10,3 +10,7 @@ hosts.ini
 **/.vagrant
 **/.vagrant/*
 **/.vagrant/**
+
+# Used in new Pi OS bootstrap process see: https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
+userconf
+ssh

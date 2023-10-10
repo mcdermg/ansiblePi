@@ -18,24 +18,23 @@
   ansible.builtin.apt_key:
     id: D75CEA17048B9ACBF186794B32637D44F14F620E
     url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public'
-    keyring: /usr/share/keyrings/datadog-archive-keyring.gp
+    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
     state: present
   when: '"datadog-iot-agent" not in ansible_facts.packages'
 
-# Seems this is not needed as can install from others
-# - name: Add DataDog Apt signing key 2
-#   ansible.builtin.apt_key:
-#     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
-#     url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public'
-#     keyring: /usr/share/keyrings/datadog-archive-keyring.gp
-#     state: present
-#   when: '"datadog-iot-agent" not in ansible_facts.packages'
+- name: Add DataDog Apt signing key 2
+  ansible.builtin.apt_key:
+    id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public'
+    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
+    state: present
+  when: '"datadog-iot-agent" not in ansible_facts.packages'
 
 - name: Add DataDog Apt signing key 3
   ansible.builtin.apt_key:
     id: D75CEA17048B9ACBF186794B32637D44F14F620E
     url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public'
-    keyring: /usr/share/keyrings/datadog-archive-keyring.gp
+    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
     state: present
   when: '"datadog-iot-agent" not in ansible_facts.packages'
 

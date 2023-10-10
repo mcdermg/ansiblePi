@@ -19,9 +19,9 @@
   # Needs gather facts true
 - name: Ensure hostname is in /etc/hosts
   ansible.builtin.lineinfile:
-    dest=/etc/hosts
-    regexp="^{{ ansible_default_ipv4.address }}.+$"
-    line="{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
+    dest: /etc/hosts
+    regexp: "^{{ ansible_default_ipv4.address }}.+$"
+    line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn }} {{ ansible_hostname }}"
   register: task_result
 
 - name: Set timezone
@@ -33,6 +33,7 @@
 
 - name: Enable NTP-SYNC
   ansible.builtin.command: timedatectl set-ntp true
+  changed_when: false
 
 - name: Debug to show value for local variable
   ansible.builtin.debug:
@@ -44,6 +45,7 @@
   ansible.builtin.command: "raspi-config nonint do_change_locale {{ var_local }}"
   become: true
   when: "user == 'pi'"
+  changed_when: false
 
 - name: Set Static IP
   ansible.builtin.blockinfile:
@@ -55,7 +57,7 @@
       static ip_address={{ static_ip_and_mask }}
       static routers={{ static_router }}
       static domain_name_servers={{ static_dns }}
-  ignore_errors: true
+  failed_when: false
 
 - name: Change user's password
   ansible.builtin.user:

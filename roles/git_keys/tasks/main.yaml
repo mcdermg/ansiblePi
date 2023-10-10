@@ -12,7 +12,7 @@
   register: ssk_key
 
 - name: Generate ssh key
-  openssh_keypair:
+  community.crypto.openssh_keypair:
     path: /home/pi/.ssh/id_rsa
     owner: '{{ user }}'
     group: '{{ user }}'
@@ -21,6 +21,8 @@
 - name: Read SSH public key to authorize
   ansible.builtin.command: cat /home/pi/.ssh/id_rsa.pub
   register: ssh_pub_key
+  check_mode: false
+  when: not ssh_pub_key.stdout
 
 - name: Ensure git is present
   ansible.builtin.apt:
@@ -29,18 +31,18 @@
   become: true
 
 - name: Add key to GitHub
-  local_action:
+  delegate_to: localhost
+  ansible.builtin.command:
     module: github_key
     name: 'pi-{{ ansible_hostname }}'
     token: '{{ github_access_token }}'
     pubkey: '{{ ssh_pub_key.stdout }}'
-  delegate_to: 127.0.0.1
   become: true
   # TODO is an issue as not always this user so hop to determine the user when using become true form the off
   become_user: 'gary' # '{{ username }}'
 
 - name: Set git config email
-  git_config:
+  community.general.git_config:
     name: user.email
     scope: global
     value: '{{ git_user_email }}'
@@ -48,7 +50,7 @@
   become_user: '{{ user }}'
 
 - name: Set git config username
-  git_config:
+  community.general.git_config:
     name: user.name
     scope: global
     value: '{{ git_user_name }}'
