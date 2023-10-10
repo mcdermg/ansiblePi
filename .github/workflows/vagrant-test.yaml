@@ -16,7 +16,7 @@ on:
 jobs:
   vagrant_test:
     name: Test playbook on Vagrant box
-    runs-on: ubuntu-latest #macos-11
+    runs-on: ubuntu-latest # macos-11
 
     steps:
       - name: Checkout
