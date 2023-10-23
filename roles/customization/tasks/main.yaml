@@ -35,7 +35,7 @@
         ('"vim" not in ansible_facts.packages') or
         ('"apt-transport-https" not in ansible_facts.packages') or
         ('"curl" not in ansible_facts.packages') or
-        ('"gnupg" not in ansible_facts.packages') or
+        ('"gnupg" not in ansible_facts.packages')
 
 # Issue with newer Ras Pi OS version not having htis set so need to manually do it for k3s to work
 - name: Add cgroup_memory to /boot/cmdline.txt for k3s
