@@ -2,7 +2,7 @@
 ---
 
 - name: Setup
-  hosts: nodes
+  hosts: all
   become: true
   vars_files:
     - vars.yaml
@@ -16,6 +16,6 @@
     - { role: fail2ban }
     - { role: git_keys }
     - { role: monitoring }
-    - { role: docker, when: model_four == 'true'}
+#    - { role: docker, when: model_four == 'true'}
 #    - { role: mount, when: model_four == 'true' }
 #    - { role: services } # TODO fix services and verify working
