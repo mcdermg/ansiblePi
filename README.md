@@ -1,5 +1,3 @@
-[![Ansible Lint](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yaml/badge.svg)](https://github.com/mcdermg/ansiblePi/actions/workflows/ansible-lint.yaml)
-
 [![Test playbook](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yaml/badge.svg)](https://github.com/mcdermg/ansiblePi/actions/workflows/vagrant-test.yaml)
 
 # ansiblePi
