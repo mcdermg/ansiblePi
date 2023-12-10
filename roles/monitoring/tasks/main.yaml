@@ -81,7 +81,7 @@
     update_cache: true
   when: '"monitorix" not in ansible_facts.packages'
 
-- name: Add monitorix config to nodes
+- name: Add monitorix config
   ansible.builtin.template:
     src: monitorix.conf.js
     dest: /etc/monitorix.monitorix.conf
