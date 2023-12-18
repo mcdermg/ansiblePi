@@ -1,4 +1,4 @@
-# Raspberry Pi device setup - Gary Mc Dermott 2019 - 2023
+# Raspberry Pi device setup - Gary Mc Dermott 2019 - 2024
 ---
 
 - name: Setup
@@ -16,6 +16,8 @@
     - { role: fail2ban }
     - { role: git_keys }
     - { role: monitoring }
-#    - { role: docker, when: model_four == 'true'}
+    - { role: docker, when: model_four == 'true' }
+    - { role: heimdall, when: model_four == 'true' }
+    - { role: bind9, when: model_four == 'true' }
 #    - { role: mount, when: model_four == 'true' }
 #    - { role: services } # TODO fix services and verify working

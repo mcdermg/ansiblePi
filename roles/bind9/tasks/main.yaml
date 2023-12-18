@@ -1,0 +1,19 @@
+---
+- name: Check if Bind9 already in place
+  ansible.builtin.stat:
+    path: /home/pi/repos/bind9
+  register: bind9_dir
+
+- name: Checkout Bind9 from github
+  ansible.builtin.git:
+    repo: git@github.com:mcdermg/bind9.git
+    dest: /home/pi/repos/bind9
+    version: main
+    accept_hostkey: true
+  become: false
+
+- name: Heimdall docker-compose up
+  community.docker.docker_compose:
+    project_src: /home/pi/repos/bind9
+    build: false
+  register: output
