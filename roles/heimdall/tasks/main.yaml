@@ -1,0 +1,19 @@
+---
+- name: Check if Heimdall already in place
+  ansible.builtin.stat:
+    path: /home/pi/repos/heimdall
+  register: heimdall_dir
+
+- name: Checkout Heimdall from github
+  ansible.builtin.git:
+    repo: git@github.com:mcdermg/heimdall.git
+    dest: /home/pi/repos/heimdall
+    version: main
+    accept_hostkey: true
+  become: false
+
+- name: Heimdall docker-compose up
+  community.docker.docker_compose:
+    project_src: /home/pi/repos/heimdall
+    build: false
+  register: output
