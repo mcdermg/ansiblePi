@@ -9,6 +9,7 @@
     repo: git@github.com:mcdermg/heimdall.git
     dest: /home/pi/repos/heimdall
     version: main
+    update: true
     accept_hostkey: true
   become: false
 
@@ -16,4 +17,16 @@
   community.docker.docker_compose:
     project_src: /home/pi/repos/heimdall
     build: false
-  register: output
+  register: heimdall_status
+
+- name: Verify Heimdall container is running
+  ansible.builtin.assert:
+    that:
+      - "heimdall_status.services.heimdall.heimdall.state.running"
+
+- name: Ensure Heimdall coontainer reachable
+  ansible.builtin.wait_for:
+    host: '{{ inventory_hostname }}'
+    port: 80
+    delay: 2
+    timeout: 15

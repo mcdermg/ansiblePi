@@ -10,10 +10,23 @@
     dest: /home/pi/repos/bind9
     version: main
     accept_hostkey: true
+    update: true
   become: false
 
-- name: Heimdall docker-compose up
+- name: Bind9 docker-compose up
   community.docker.docker_compose:
     project_src: /home/pi/repos/bind9
     build: false
-  register: output
+  register: bind9_status
+
+- name: Verify Bind9 container is running
+  ansible.builtin.assert:
+    that:
+      - "bind9_status.services.bind9['dns-bind9'].state.running"
+
+- name: Ensure Bind9 container is reachable
+  ansible.builtin.wait_for:
+    host: localhost
+    port: 53
+    delay: 2
+    timeout: 15

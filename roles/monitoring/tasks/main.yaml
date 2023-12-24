@@ -74,28 +74,28 @@
     state: started
   when: '"datadog-iot-agent" not in ansible_facts.packages'
 
-- name: Install monitorix
-  ansible.builtin.apt:
-    name: monitorix
-    state: present
-    update_cache: true
-  when: '"monitorix" not in ansible_facts.packages'
+# - name: Install monitorix
+#   ansible.builtin.apt:
+#     name: monitorix
+#     state: present
+#     update_cache: true
+#   when: '"monitorix" not in ansible_facts.packages'
 
-- name: Add monitorix config
-  ansible.builtin.template:
-    src: monitorix.conf.js
-    dest: /etc/monitorix.monitorix.conf
-    owner: root
-    group: root
-    mode: '644'
-  when: '"monitorix" not in ansible_facts.packages'
+# - name: Add monitorix config
+#   ansible.builtin.template:
+#     src: monitorix.conf.js
+#     dest: /etc/monitorix.monitorix.conf
+#     owner: root
+#     group: root
+#     mode: '644'
+#   when: '"monitorix" not in ansible_facts.packages'
 
-- name: Enable monitorix service
-  ansible.builtin.service:
-    name: monitorix
-    enabled: true
-    state: started
-  when: '"monitorix" not in ansible_facts.packages'
+# - name: Enable monitorix service
+#   ansible.builtin.service:
+#     name: monitorix
+#     enabled: true
+#     state: started
+#   when: '"monitorix" not in ansible_facts.packages'
 
 - name: Install prometheus-node-exporter
   ansible.builtin.apt:

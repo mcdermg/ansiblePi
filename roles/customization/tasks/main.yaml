@@ -27,6 +27,8 @@
     - apt-transport-https
     - curl
     - gnupg
+    # For longhorn
+    - open-iscsi
   when: ('"git" not in ansible_facts.packages') or
         ('"zsh" not in ansible_facts.packages') or
         ('"mc" not in ansible_facts.packages') or
@@ -35,7 +37,8 @@
         ('"vim" not in ansible_facts.packages') or
         ('"apt-transport-https" not in ansible_facts.packages') or
         ('"curl" not in ansible_facts.packages') or
-        ('"gnupg" not in ansible_facts.packages')
+        ('"gnupg" not in ansible_facts.packages') or
+        ('"open-iscsi" not in ansible_facts.packages')
 
 # Issue with newer Ras Pi OS version not having htis set so need to manually do it for k3s to work
 - name: Add cgroup_memory to /boot/cmdline.txt for k3s
