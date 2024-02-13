@@ -30,23 +30,23 @@
     pubkey: '{{ ssh_pub_key_content.content | b64decode }}'
 
 - name: Ensure git is present
+  become: true
   ansible.builtin.apt:
     name: git
     state: present
-  become: true
 
 - name: Set git config email
+  become: true
+  become_user: '{{ user }}'
   community.general.git_config:
     name: user.email
     scope: global
     value: '{{ git_user_email }}'
-  become: true
-  become_user: '{{ user }}'
 
 - name: Set git config username
+  become: true
+  become_user: '{{ user }}'
   community.general.git_config:
     name: user.name
     scope: global
     value: '{{ git_user_name }}'
-  become: true
-  become_user: '{{ user }}'
