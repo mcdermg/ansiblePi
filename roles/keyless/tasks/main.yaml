@@ -20,7 +20,7 @@
   ansible.posix.authorized_key:
     user: '{{ user }}'
     state: present
-    Comment: Ubuntu
+    comment: Ubuntu
     key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
   when: "user == 'pi'"
 
