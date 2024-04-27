@@ -28,8 +28,8 @@
   community.general.timezone:
     name: '{{ var_timezone }}'
 
-# - name: Set Timezone
-#   ansible.builtin.command: timedatectl set-timezone {{ var_timezone }}
+- name: Set Timezone
+  ansible.builtin.command: timedatectl set-timezone {{ var_timezone }}
 
 - name: Enable NTP-SYNC
   ansible.builtin.command: timedatectl set-ntp true
@@ -39,25 +39,27 @@
   ansible.builtin.debug:
     msg: '{{ var_local }}'
 
-# Alter local
-# Not working in Vagrant test run so will skip
+# Not working in Vagrant test run so will skip and also skip for non arm architecture
 - name: Change locale
   ansible.builtin.command: "raspi-config nonint do_change_locale {{ var_local }}"
   become: true
-  when: "user == 'pi'"
+  when:
+    - user == 'pi'
+    - ansible_architecture != 'x86_64'
   changed_when: false
 
-- name: Set Static IP
-  ansible.builtin.blockinfile:
-    path: /etc/dhcpcd.conf
-    marker: "\n## {mark} added by ansible bootstrap"
-    insertafter: "fallback static_eth0"
-    block: |
-      interface wlan0
-      static ip_address={{ static_ip_and_mask }}
-      static routers={{ static_router }}
-      static domain_name_servers={{ static_dns }}
-  failed_when: false
+# # # # for wlan and not eth, need to set to eth connection and handle if none? currently setting in router
+# - name: Set Static IP
+#   ansible.builtin.blockinfile:
+#     path: /etc/dhcpcd.conf
+#     marker: "\n## {mark} added by ansible bootstrap"
+#     insertafter: "fallback static_eth0"
+#     block: |
+#       interface wlan0
+#       static ip_address={{ static_ip_and_mask }}
+#       static routers={{ static_router }}
+#       static domain_name_servers={{ static_dns }}
+#   failed_when: false
 
 - name: Change user's password
   ansible.builtin.user:

@@ -1,7 +1,6 @@
 # Raspberry Pi device setup - Gary Mc Dermott 2019 - 2024
 ---
-
-- name: Setup
+- name: Raspberry pi device setup
   hosts: all
   become: true
   vars_files:
