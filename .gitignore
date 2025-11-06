@@ -11,6 +11,9 @@ hosts.ini
 **/.vagrant/*
 **/.vagrant/**
 
+# VSCOde etc
+.vscode/
+
 # Used in new Pi OS bootstrap process see: https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
 userconf
 ssh

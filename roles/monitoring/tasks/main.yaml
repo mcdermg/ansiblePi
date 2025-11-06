@@ -6,96 +6,96 @@
   ansible.builtin.package_facts:
     manager: "auto"
 
-# See https://github.com/DataDog/ansible-datadog/blob/3c2c471bd477b48e00d4fdeac5aedd847a77886c/defaults/main.yml#L87
-#  - key: "DATADOG_APT_KEY_CURRENT"
-#    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public
-#  - key: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
-#    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public
-#  - key: D75CEA17048B9ACBF186794B32637D44F14F620E
-#    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public
+## See https://github.com/DataDog/ansible-datadog/blob/3c2c471bd477b48e00d4fdeac5aedd847a77886c/defaults/main.yml#L87
+##  - key: "DATADOG_APT_KEY_CURRENT"
+##    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public
+##  - key: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+##    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public
+##  - key: D75CEA17048B9ACBF186794B32637D44F14F620E
+##    value: https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public
+#
+#- name: Add DataDog Apt signing key 1
+#  ansible.builtin.apt_key:
+#    id: D75CEA17048B9ACBF186794B32637D44F14F620E
+#    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public'
+#    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
+#    state: present
+#  when: '"datadog-iot-agent" not in ansible_facts.packages'
+#
+## Error - check not a subkey
+## - name: Add DataDog Apt signing key 2
+##   ansible.builtin.apt_key:
+##     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+##     url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public'
+##     keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
+##     state: present
+##   when: '"datadog-iot-agent" not in ansible_facts.packages'
+#
+#- name: Add DataDog Apt signing key 3
+#  ansible.builtin.apt_key:
+#    id: D75CEA17048B9ACBF186794B32637D44F14F620E
+#    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public'
+#    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
+#    state: present
+#  when: '"datadog-iot-agent" not in ansible_facts.packages'
+#
+#- name: Add datadog apt source
+#  ansible.builtin.apt_repository:
+#    repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.datadoghq.com/ stable 7"
+#    state: present
+#    filename: datadog
+#  when: '"datadog-iot-agent" not in ansible_facts.packages'
+#
+#- name: Install Datadog IoT agent 7
+#  ansible.builtin.apt:
+#    name: datadog-iot-agent
+#    state: present
+#    update_cache: true
+#  when: '"datadog-iot-agent" not in ansible_facts.packages'
+#
+#- name: Check if datadog config file exists
+#  ansible.builtin.stat:
+#    path: /etc/datadog-agent/datadog.yaml
+#  register: ddog_config_file
+#
+#- name: Add datadog config
+#  ansible.builtin.template:
+#    src: datadog.yaml.js
+#    dest: /etc/datadog-agent/datadog.yaml
+#    owner: dd-agent
+#    group: dd-agent
+#    mode: '644'
+#  when: not ddog_config_file.stat.exists
+#
+#- name: Enable datadog service
+#  ansible.builtin.service:
+#    name: datadog-agent
+#    enabled: true
+#    state: started
+#  when: '"datadog-iot-agent" not in ansible_facts.packages'
 
-- name: Add DataDog Apt signing key 1
-  ansible.builtin.apt_key:
-    id: D75CEA17048B9ACBF186794B32637D44F14F620E
-    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_CURRENT.public'
-    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
-    state: present
-  when: '"datadog-iot-agent" not in ansible_facts.packages'
-
-# Error - check not a subkey
-# - name: Add DataDog Apt signing key 2
-#   ansible.builtin.apt_key:
-#     id: A2923DFF56EDA6E76E55E492D3A80E30382E94DE
-#     url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_382E94DE.public'
-#     keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
-#     state: present
-#   when: '"datadog-iot-agent" not in ansible_facts.packages'
-
-- name: Add DataDog Apt signing key 3
-  ansible.builtin.apt_key:
-    id: D75CEA17048B9ACBF186794B32637D44F14F620E
-    url: 'https://s3.amazonaws.com/public-signing-keys/DATADOG_APT_KEY_F14F620E.public'
-    keyring: /usr/share/keyrings/datadog-archive-keyring.gpg
-    state: present
-  when: '"datadog-iot-agent" not in ansible_facts.packages'
-
-- name: Add datadog apt source
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/datadog-archive-keyring.gpg] https://apt.datadoghq.com/ stable 7"
-    state: present
-    filename: datadog
-  when: '"datadog-iot-agent" not in ansible_facts.packages'
-
-- name: Install Datadog IoT agent 7
+- name: Install monitorix
   ansible.builtin.apt:
-    name: datadog-iot-agent
+    name: monitorix
     state: present
     update_cache: true
-  when: '"datadog-iot-agent" not in ansible_facts.packages'
+  when: '"monitorix" not in ansible_facts.packages'
 
-- name: Check if datadog config file exists
-  ansible.builtin.stat:
-    path: /etc/datadog-agent/datadog.yaml
-  register: ddog_config_file
-
-- name: Add datadog config
+- name: Add monitorix config
   ansible.builtin.template:
-    src: datadog.yaml.js
-    dest: /etc/datadog-agent/datadog.yaml
-    owner: dd-agent
-    group: dd-agent
+    src: monitorix.conf.js
+    dest: /etc/monitorix.monitorix.conf
+    owner: root
+    group: root
     mode: '644'
-  when: not ddog_config_file.stat.exists
+  when: '"monitorix" not in ansible_facts.packages'
 
-- name: Enable datadog service
+- name: Enable monitorix service
   ansible.builtin.service:
-    name: datadog-agent
+    name: monitorix
     enabled: true
     state: started
-  when: '"datadog-iot-agent" not in ansible_facts.packages'
-
-# - name: Install monitorix
-#   ansible.builtin.apt:
-#     name: monitorix
-#     state: present
-#     update_cache: true
-#   when: '"monitorix" not in ansible_facts.packages'
-
-# - name: Add monitorix config
-#   ansible.builtin.template:
-#     src: monitorix.conf.js
-#     dest: /etc/monitorix.monitorix.conf
-#     owner: root
-#     group: root
-#     mode: '644'
-#   when: '"monitorix" not in ansible_facts.packages'
-
-# - name: Enable monitorix service
-#   ansible.builtin.service:
-#     name: monitorix
-#     enabled: true
-#     state: started
-#   when: '"monitorix" not in ansible_facts.packages'
+  when: '"monitorix" not in ansible_facts.packages'
 
 - name: Install prometheus-node-exporter
   ansible.builtin.apt:

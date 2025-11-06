@@ -38,15 +38,15 @@
         ('"gnupg" not in ansible_facts.packages')
 
 # Issue with newer Ras Pi OS version not having this set so need to manually do it for k3s to work
-- name: Add cgroup_memory to /boot/cmdline.txt for k3s
+- name: Add cgroup_memory to /boot/firmware/cmdline.txt for k3s
   ansible.builtin.lineinfile:
-    path: /boot/cmdline.txt
+    path: /boot/firmware/cmdline.txt
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
     backrefs: true
     regexp: '^(console=serial0,115200 console=tty1 root=PARTUUID=[a-f0-9]+-02 rootfstype=ext4 fsck\.repair=yes rootwait)(.*)$'
   when:
     - user == 'pi'  # For Vagrant test
-    - ansible_architecture != 'x86_64'  # For non Arm architecture  
+    - ansible_architecture != 'x86_64'  # For non Arm architecture
   notify:
     - Restart
 
